@@ -24,24 +24,52 @@
 
  */
 
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { mockCurrentExplore } from "../MockData/MockData";
-import { columns } from '../../components/DataDictionary'
-import { theme} from "@looker/components"
-import { ThemeProvider } from "styled-components"
-import { DetailDrawerRow } from '../../components/DetailDrawerRow'
+import React, { useState, useEffect } from "react";
+import {
+  Chip,
+  Flex,
+  FlexItem,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  theme,
+} from "@looker/components";
+import styled, { ThemeProvider } from "styled-components";
+import "./styles.css";
+import {  } from "../utils/routes"
+import {  } from "./interfaces";
+import { covid_country_deaths } from "./covid_country_deaths";
+import {  } from "@looker/sdk";
+import { Group } from '@vx/group';
+import { Bar } from '@vx/shape';
+import { scaleLinear, scaleBand } from '@vx/scale';
+import { AxisBottom } from '@vx/axis';
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <ThemeProvider theme={theme}>
-        <DetailDrawerRow
-          column={columns[0]}
-          field={mockCurrentExplore.fields.dimensions[0]}
+export const XAxis: React.FC<{
+  label: string,
+  xTickFormat: any,
+  xScale: any,
+  plot: any,
+  pHeight: number,
+}> = ({ label, xTickFormat, xScale, plot, pHeight, }) => {
+  return (
+    <AxisWrapper flexBasis={`${pHeight*100}%`} className="shown">
+      <svg
+        style={{height: "100%"}}
+        >
+        <AxisBottom
+          top={5}
+          scale={xScale}
+          stroke={"#282828"}
+          tickStroke={"#282828"}
+          label={label}
         />
-      </ThemeProvider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-})
+      </svg>
+    </AxisWrapper>
+  );
+}
+
+// @ts-ignore
+const AxisWrapper = styled(FlexItem)`
+`;

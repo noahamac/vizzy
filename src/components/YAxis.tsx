@@ -24,32 +24,52 @@
 
  */
 
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { theme} from "@looker/components"
-import { ThemeProvider } from "styled-components"
-import { FieldCommentList } from '../../components/FieldCommentList'
+import React, { useState, useEffect } from "react";
+import {
+  Chip,
+  Flex,
+  FlexItem,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  theme,
+} from "@looker/components";
+import styled, { ThemeProvider } from "styled-components";
+import "./styles.css";
+import {  } from "../utils/routes"
+import {  } from "./interfaces";
+import { covid_country_deaths } from "./covid_country_deaths";
+import {  } from "@looker/sdk";
+import { Group } from '@vx/group';
+import { Bar } from '@vx/shape';
+import { scaleLinear, scaleBand } from '@vx/scale';
+import { AxisLeft } from '@vx/axis';
 
-jest.mock("../../components/FieldComment", () => ({
-  FieldComment: () => "FieldComment"
-}))
-
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <ThemeProvider theme={theme}>
-        <FieldCommentList 
-            sortedComments={[]}
-            addComment={()=>{}}
-            editComment={()=>{}}
-            deleteComment={()=>{}}
-            explore={{}}
-            field={{}}
-            commentAuthors={[]}
-            me={{}}
+export const YAxis: React.FC<{
+  label: string,
+  yScale: any,
+  plot: any,
+  pWidth: number,
+}> = ({ label, yScale, plot, pWidth }) => {
+  return (
+    <AxisWrapper flexBasis={`${pWidth*100}%`} className="shown">
+      <svg
+        style={{height: "100%"}}
+        >
+        <AxisLeft
+          top={0}
+          left={plot.width*(pWidth*0.95)}
+          scale={yScale}
+          stroke={"#282828"}
+          tickStroke={"#282828"}
+          label={label}
         />
-      </ThemeProvider>
-    )
-    .toJSON();
-  expect(tree).toMatchSnapshot();
-})
+      </svg>
+    </AxisWrapper>
+  );
+}
+
+// @ts-ignore
+const AxisWrapper = styled(FlexItem)`
+`;

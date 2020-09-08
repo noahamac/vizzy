@@ -24,25 +24,45 @@
 
  */
 
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { theme} from "@looker/components"
-import { ThemeProvider } from "styled-components"
+import React, { useState, useEffect } from "react";
+import {
+  Chip,
+  Flex,
+  FlexItem,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  Paragraph,
+  theme,
+} from "@looker/components";
+import styled, { ThemeProvider } from "styled-components";
+import "./styles.css";
+import {  } from "../utils/routes"
+import {  } from "./interfaces";
+import { covid_country_deaths } from "./covid_country_deaths";
+import {  } from "@looker/sdk";
+import { Group } from '@vx/group';
+import { Bar } from '@vx/shape';
+import { scaleLinear, scaleBand } from '@vx/scale';
+import { AxisLeft } from '@vx/axis';
 
-import { ViewOptions } from '../../components/ViewOptions'
-import { columns } from "../../components/DataDictionary";
-import { defaultShowColumns } from "../../components/PanelFields";
+export const Title: React.FC<{
+  content: string,
+  pHeight: number
+}> = ({ content, pHeight }) => {
+  return (
+    <TitleWrapper 
+      flexBasis={`${pHeight*100}%`} 
+      className="shown" 
+      width="100%"
+      alignSelf="center"
+    >
+      <Paragraph textAlign="center" pt="small">{content}</Paragraph>
+    </TitleWrapper>
+  );
+}
 
-it('renders correctly', () => {
-  const tree = renderer
-    .create(
-      <ThemeProvider theme={theme}>
-        <ViewOptions
-          columns={columns}
-          shownColumns={defaultShowColumns}
-          setShownColumns={() => {}}
-        />)
-      </ThemeProvider>
-    ).toJSON();
-  expect(tree).toMatchSnapshot();
-})
+// @ts-ignore
+const TitleWrapper = styled(FlexItem)`
+`;

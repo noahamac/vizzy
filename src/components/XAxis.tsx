@@ -24,47 +24,52 @@
 
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Code,
-  TableRow,
-  TableDataCell,
+  Chip,
+  Flex,
+  FlexItem,
+  Heading,
+  Button,
+  Spinner,
+  Text,
+  theme,
 } from "@looker/components";
+import styled, { ThemeProvider } from "styled-components";
+import "./styles.css";
+import { covid_country_deaths } from "./covid_country_deaths";
+import {  } from "@looker/sdk";
+import { Group } from '@vx/group';
+import { Bar } from '@vx/shape';
+import { scaleLinear, scaleBand } from '@vx/scale';
+import { AxisBottom } from '@vx/axis';
 
-import { ILookmlModelExploreField } from "@looker/sdk";
-import { ColumnDescriptor } from "./interfaces";
-
-export const DetailDrawerRow: React.FC<{
-  column: ColumnDescriptor,
-  field: ILookmlModelExploreField,
-}> = ({ column, field }) => {
+export const XAxis: React.FC<{
+  xScale: any,
+  isEditing: boolean,
+  setup: any,
+  plot: any,
+  config: any,
+  setConfig: (newConfig: any) => void,
+}> = ({ xScale, isEditing, setup, plot, config, setConfig }) => {
   return (
-    <TableRow key={column.rowValueDescriptor}>
-      <TableDataCell
-        color="palette.charcoal700"
-        p="medium"
-        pl="small"
-        pr="small"
-      >
-        { column.label }
-      </TableDataCell>
-      <TableDataCell
-        className="break"
-        color="palette.charcoal700"
-        p="medium"
-        pl="small"
-        pr="small"
-      >
-        <Code
-          color="palette.charcoal700"
-          fontSize="small"
-          className="break"
+    <AxisWrapper flexBasis={`${config.XAXIS_Y_RATIO || setup.XAXIS_Y_RATIO*100}%`} pt="xxsmall" className={isEditing ? "EDIT_MODE" : ""}>
+      <svg
+        style={{height: "100%"}}
         >
-          {/*
-          // @ts-ignore */}
-          {column.formatter(field[column.rowValueDescriptor], false, field)}
-        </Code>
-      </TableDataCell>
-    </TableRow>
-  )
-};
+        <AxisBottom
+          left={0}
+          top={2}
+          scale={xScale}
+          stroke={"#282828"}
+          tickStroke={"#282828"}
+          label={"ok let's try"}
+        />
+      </svg>
+    </AxisWrapper>
+  );
+}
+
+// @ts-ignore
+const AxisWrapper = styled(FlexItem)`
+`;

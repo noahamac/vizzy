@@ -30,11 +30,37 @@ export interface ColumnDescriptor {
   name: string
   label: string
   rowValueDescriptor: string
-  formatter: (x: string, isRow?: boolean, field?: ILookmlModelExploreField) => string | JSX.Element
+  formatter: (x: string, isRow?: boolean, field?: ILookmlModelExploreField, commentCount?: number) => string | JSX.Element
   minWidth?: string
   maxWidth?: string
+  default?: boolean
 }
 
 export interface SidebarStyleProps {
   open: boolean;
+}
+
+export interface FieldComments {
+  author: number,
+  timestamp: number,
+  content: string,
+  edited: boolean,
+  pk: string,
+  deleted?: boolean,
+}
+
+export interface ExploreComments {
+  [field_name: string]: FieldComments[]
+}
+
+export interface UserData {
+  display_name: string,
+  avatar_url: string,
+  first_name: string,
+  last_name: string,
+  color?: string,
+}
+
+export interface AllComments {
+  [explore_name: string]: ExploreComments
 }

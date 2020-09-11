@@ -25,13 +25,12 @@
  */
 
 import React from "react"
-import { theme, GlobalStyle } from "@looker/components"
-import { DataDictionary } from "./DataDictionary"
+import { theme } from "@looker/components"
+import { Vizzy } from "./Vizzy"
 import { ThemeProvider } from "styled-components"
 
 export const Extension: React.FC = () => (
   <ThemeProvider theme={theme}>
-    <GlobalStyle />
-    <DataDictionary />
+    <Vizzy />
   </ThemeProvider>
 )

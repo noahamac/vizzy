@@ -29,6 +29,7 @@ import {
   Chip,
   Flex,
   FlexItem,
+  ComponentsProvider,
   Heading,
   Button,
   Spinner,
@@ -37,10 +38,11 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
+import { useWindowSize, useKeyPress, getConfig } from "../utils/fetchers"
 import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import { july_dist } from "./polls_july";
+import { polls_flat } from "./polls_flat";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
@@ -52,52 +54,19 @@ import { YAxis } from "./YAxis";
 import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
 
-function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-    
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-    
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-    
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-
-  return windowSize;
-}
-
-function getBarChart(plot: any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
-  let data = july_dist
+function getBarChart(defaults: any, config: any, plot: any) {
+  let data = covid_country_deaths.filter((d,i)=>{return i<10})
 
   const x = (d: any) => d["Country"];
   const y = (d: any) => d["Deaths (Running Total)"];
 
   const xScale = scaleBand({
-    range: [0, plot.width*CHART_X_RATIO],
+    range: [0, plot.width*(config.CHART_X_RATIO || defaults.CHART_X_RATIO)],
     domain: data.map(x),
   });
 
-  const xTickFormat = (v: number) => v
-
   const yScale = scaleLinear({
-    range: [plot.height*CHART_Y_RATIO, 0],
+    range: [plot.height*(config.CHART_Y_RATIO || defaults.CHART_Y_RATIO), 0],
     domain: [0, Math.max(...data.map(y))],
   });
 
@@ -105,7 +74,7 @@ function getBarChart(plot: any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
   const xPoint = compose(xScale, x);
   const yPoint = compose(yScale, y);
 
-  return { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat }
+  return { data, x, y, xScale, yScale, xPoint, yPoint }
 }
 
 function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
@@ -118,20 +87,6 @@ function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
   const firstQuartile = (d: any) => d.boxPlot.firstQuartile;
   const thirdQuartile = (d: any) => d.boxPlot.thirdQuartile;
   const outliers = (d: any) => d.boxPlot.outliers;
-
-  interface TooltipData {
-    name?: string;
-    min?: number;
-    median?: number;
-    max?: number;
-    firstQuartile?: number;
-    thirdQuartile?: number;
-  }
-  
-  type StatsPlotProps = {
-    width: number;
-    height: number;
-  };
 
   const xMax = plot.width;
   const yMax = plot.height;
@@ -158,7 +113,35 @@ function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
   return { xScale, yScale, data, boxWidth, x }
 }
 
+function getScatter(config: any) {
+  let data = covid_country_deaths.filter((d,i)=>{return i<10})
+
+  const x = (d: any) => d["Country"];
+  const y = (d: any) => d["Deaths (Running Total)"];
+
+  const xScale = scaleBand({
+    range: [0, config.width*config.CHART_X_RATIO],
+    domain: data.map(x),
+  });
+
+  const xTickFormat = (v: number) => v
+
+  const yScale = scaleLinear({
+    range: [config.height*config.CHART_Y_RATIO, 0],
+    domain: [0, Math.max(...data.map(y))],
+  });
+
+  const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
+  const xPoint = compose(xScale, x);
+  const yPoint = compose(yScale, y);
+
+  return { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat }
+}
+
 export const Vizzy: React.FC<{}> = () => {
+  const isEditing = useKeyPress("Escape");
+  const { config, addConfig } = getConfig()
+
   const plot = useWindowSize();
   const LEGEND_X_RATIO = 0.1
   const YAXIS_X_RATIO = 0.1
@@ -169,69 +152,93 @@ export const Vizzy: React.FC<{}> = () => {
   const INNER_CHART_Y_RATIO = 1 - XAXIS_Y_RATIO
   const CHART_Y_RATIO = 1 - XAXIS_Y_RATIO - TITLE_Y_RATIO
 
-  // const { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat } = getBarChart(plot, CHART_X_RATIO, CHART_Y_RATIO)
-  const { xScale, yScale, data, boxWidth, x } = getBoxplot(plot, CHART_X_RATIO, CHART_Y_RATIO)
+  const defaults = {
+    LEGEND_X_RATIO: LEGEND_X_RATIO,
+    YAXIS_X_RATIO: YAXIS_X_RATIO,
+    CHART_X_RATIO: CHART_X_RATIO,
+    TITLE_Y_RATIO: TITLE_Y_RATIO,
+    XAXIS_Y_RATIO: XAXIS_Y_RATIO,
+    INNER_CHART_Y_RATIO: INNER_CHART_Y_RATIO,
+    CHART_Y_RATIO: CHART_Y_RATIO,
+  }
+
+  const { data, x, y, xScale, yScale, xPoint, yPoint } = getBarChart(defaults, config, plot)
+  // const { xScale, yScale, data, boxWidth, x } = getBoxplot(plot, CHART_X_RATIO, CHART_Y_RATIO)
+
+  console.log(config)
 
   return (
-    <Tile flexDirection="column" height="100%">
+    <ComponentsProvider>
+    {config && <Tile flexDirection="column" height="100%" p="xxxlarge">
       <Title
-        content="Q3 Monthly Polling Distributions"
-        pHeight={TITLE_Y_RATIO}
+        content="Polling Distributions"
+        isEditing={isEditing}
+        setup={defaults}
+        plot={plot}
+        config={config}
+        setConfig={addConfig}
       />
       <Flex flexBasis="90%">
         <YAxis
-            label={""}
             yScale={yScale}
+            isEditing={isEditing}
+            setup={defaults}
             plot={plot}
-            pWidth={YAXIS_X_RATIO}
+            config={config}
+            setConfig={addConfig}
         />
-        <Flex flexDirection="column" flexBasis={`${CHART_X_RATIO*100}%`}>
-          {/* <BarChart
+        <Flex flexDirection="column" flexBasis={`${config.CHART_X_RATIO || defaults.CHART_X_RATIO * 100}%`}>
+          <BarChart
             data={data}
             xPoint={xPoint}
             yPoint={yPoint}
             xScale={xScale}
+            isEditing={isEditing}
+            setup={defaults}
             plot={plot}
-            pHeight={INNER_CHART_Y_RATIO}
-          /> */}
-          <Boxplot
+            config={config}
+            setConfig={addConfig}
+          />
+          {/* <Boxplot
             data={data}
             xScale={xScale}
             yScale={yScale}
             boxWidth={boxWidth}
             plot={plot}
             pHeight={INNER_CHART_Y_RATIO}
-          />
+            isEditing={isEditing}
+          /> */}
           <XAxis
-            label={""}
-            xTickFormat={x}
             xScale={xScale}
+            isEditing={isEditing}
+            setup={defaults}
             plot={plot}
-            pHeight={XAXIS_Y_RATIO}
+            config={config}
+            setConfig={addConfig}
           />
         </Flex>
         <VizLegend 
-          pWidth={LEGEND_X_RATIO}
+          isEditing={isEditing}
+          setup={defaults}
+          plot={plot}
+          config={config}
+          setConfig={addConfig}
         />
       </Flex>
-    </Tile>
+    </Tile>}
+    </ComponentsProvider>
   );
 }
 
 // @ts-ignore
 const Tile = styled(Flex)`
   padding: 5px;
-  .hidden {
+  .EDIT_MODE {
     border-radius: 5px;
     box-shadow: 0px 0px 0px 1px #4285F4 inset;
   }
-  .hidden:hover {
+  .EDIT_MODE:hover {
     margin: 0.5%;
     box-shadow: 0px 0px 0px 3px #4285F4 inset;
   }
 `;
-
-// @ts-ignore
-const Legend = styled(FlexItem)`
-`;
-

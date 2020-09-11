@@ -25,41 +25,121 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { Property } from 'csstype'
 import {
-  Chip,
-  Flex,
   FlexItem,
-  Heading,
-  Button,
-  Spinner,
+  Select,
   Text,
   Paragraph,
-  theme,
+  InlineInputText,
+  InlineTextArea,
+  Space,
+  Popover,
+  PopoverContent,
 } from "@looker/components";
-import styled, { ThemeProvider } from "styled-components";
-import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
-import { covid_country_deaths } from "./covid_country_deaths";
-import {  } from "@looker/sdk";
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
-import { scaleLinear, scaleBand } from '@vx/scale';
-import { AxisLeft } from '@vx/axis';
+import styled from "styled-components";
 
 export const Title: React.FC<{
   content: string,
-  pHeight: number
-}> = ({ content, pHeight }) => {
+  isEditing: boolean,
+  setup: any,
+  plot: any,
+  config: any,
+  setConfig: (config: any) => void,
+}> = ({ content, isEditing, setup, plot, config, setConfig }) => {
+
+  const defaults = {
+    fontSize: "large",
+    position: "center",
+    description: "",
+    descFontSize: "xsmall",
+  }
+
+  const configCard = isEditing && (
+    <PopoverContent p="small" width="300px" height="auto">
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Title Position</Text>
+        <Select 
+          defaultValue={config.position || defaults.position} 
+          options={[
+            { value: 'left', label: 'left' },
+            { value: 'center', label: 'center' },
+            { value: 'right', label: 'right' },
+          ]}
+          onChange={(e)=>{setConfig({...config, position: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Title Override</Text>
+        <InlineInputText 
+          value={config.title || content} 
+          onChange={(e)=>{setConfig({...config, title: e.currentTarget.value})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Title Font Size</Text>
+        <Select 
+          defaultValue={config.fontSize || defaults.fontSize} 
+          options={[
+            { value: 'small', label: 'small' },
+            { value: 'medium', label: 'medium' },
+            { value: 'large', label: 'large' },
+            { value: 'xlarge', label: 'larger' },
+            { value: 'xxlarge', label: 'largest' },
+          ]}
+          onChange={(e)=>{setConfig({...config, fontSize: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Description</Text>
+        <InlineTextArea 
+          value={config.description || defaults.description} 
+          onChange={(e)=>{setConfig({...config, description: e.currentTarget.value})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Description Font Size</Text>
+        <Select 
+          defaultValue={config.descFontSize || defaults.descFontSize} 
+          options={[
+            { value: 'xxsmall', label: 'smallest' },
+            { value: 'xsmall', label: 'smaller' },
+            { value: 'small', label: 'small' },
+          ]}
+          onChange={(e)=>{setConfig({...config, descFontSize: e})}}
+        />
+      </Space>
+    </PopoverContent>
+  )
+
   return (
-    <TitleWrapper 
-      flexBasis={`${pHeight*100}%`} 
-      className="shown" 
-      width="100%"
-      alignSelf="center"
-    >
-      <Paragraph textAlign="center" pt="small">{content}</Paragraph>
-    </TitleWrapper>
+    <>
+    <Popover content={configCard} placement="bottom-start">
+      <TitleWrapper 
+        flexBasis={`${config.TITLE_Y_RATIO || setup.TITLE_Y_RATIO*100}%`} 
+        width="100%"
+        textAlign={config.position || defaults.position}
+        className={isEditing && "EDIT_MODE"}
+      >
+        <Text
+          pt="small"
+          pl="small" 
+          pr="small" 
+          fontSize={config.fontSize || defaults.fontSize}
+        >
+          {config.title || content}
+        </Text>
+        <Paragraph 
+          pl="small" 
+          pr="small"
+          fontSize={config.descFontSize || defaults.descFontSize} 
+          variant="subdued"
+        >
+          {config.description}
+        </Paragraph>
+      </TitleWrapper>
+    </Popover>
+    </>
   );
 }
 

@@ -37,8 +37,6 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
@@ -47,23 +45,25 @@ import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisBottom } from '@vx/axis';
 
 export const XAxis: React.FC<{
-  label: string,
-  xTickFormat: any,
   xScale: any,
+  isEditing: boolean,
+  setup: any,
   plot: any,
-  pHeight: number,
-}> = ({ label, xTickFormat, xScale, plot, pHeight, }) => {
+  config: any,
+  setConfig: (newConfig: any) => void,
+}> = ({ xScale, isEditing, setup, plot, config, setConfig }) => {
   return (
-    <AxisWrapper flexBasis={`${pHeight*100}%`} className="shown">
+    <AxisWrapper flexBasis={`${config.XAXIS_Y_RATIO || setup.XAXIS_Y_RATIO*100}%`} pt="xxsmall" className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >
         <AxisBottom
-          top={5}
+          left={0}
+          top={2}
           scale={xScale}
           stroke={"#282828"}
           tickStroke={"#282828"}
-          label={label}
+          label={"ok let's try"}
         />
       </svg>
     </AxisWrapper>

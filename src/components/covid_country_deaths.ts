@@ -24,7 +24,6 @@ export const covid_country_deaths = [
     "Total Population": 1380004385
   },
   {
-    "Country": "UK",
     "Deaths (Running Total)": 41552,
     "Deaths per Million (Running Total)": 612.0848667923647,
     "Total Population": 67886011

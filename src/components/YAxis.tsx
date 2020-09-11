@@ -33,12 +33,14 @@ import {
   Button,
   Spinner,
   Text,
-  theme,
+  Popover,
+  PopoverContent,
+  Select,
+  Space,
+  InlineInputText
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
@@ -47,26 +49,61 @@ import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisLeft } from '@vx/axis';
 
 export const YAxis: React.FC<{
-  label: string,
   yScale: any,
+  isEditing: boolean,
+  setup: any,
   plot: any,
-  pWidth: number,
-}> = ({ label, yScale, plot, pWidth }) => {
+  config: any,
+  setConfig: (newConfig: any) => void,
+}> = ({ yScale, isEditing, setup, plot, config, setConfig, }) => {
+
+  const defaults = {
+    fontSize: "large",
+    position: "center",
+    description: "",
+    descFontSize: "xsmall",
+  }
+
+  useEffect(() => {
+    return () => {
+      setConfig({...defaults, ...config})
+    };
+  }, []);
+
+  const configCard = isEditing && (
+    <PopoverContent p="small" width="300px" height="auto">
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Title Position</Text>
+        <Select 
+          defaultValue={config.position || defaults.position} 
+          options={[
+            { value: 'left', label: 'left' },
+            { value: 'center', label: 'center' },
+            { value: 'right', label: 'right' },
+          ]}
+          onChange={(e)=>{setConfig({...config, position: e})}}
+        />
+      </Space>
+    </PopoverContent>
+  )
+
   return (
-    <AxisWrapper flexBasis={`${pWidth*100}%`} className="shown">
+    <Popover content={configCard} placement="right-start">
+    <AxisWrapper flexBasis={`${config.YAXIS_X_RATIO || setup.YAXIS_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >
         <AxisLeft
           top={0}
-          left={plot.width*(pWidth*0.95)}
+          left={plot.width*(config.YAXIS_X_RATIO || setup.YAXIS_X_RATIO*0.94)}
           scale={yScale}
           stroke={"#282828"}
           tickStroke={"#282828"}
-          label={label}
+          label={"nothing for now"}
         />
       </svg>
     </AxisWrapper>
+    </Popover>
   );
 }
 

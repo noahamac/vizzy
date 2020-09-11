@@ -37,8 +37,6 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
@@ -50,14 +48,18 @@ export const BarChart: React.FC<{
   xPoint: (point: any) => number,
   yPoint: (point: any) => number,
   xScale: any,
+  isEditing: boolean,
+  setup: any,
   plot: any,
-  pHeight: number,
-}> = ({ data, xPoint, yPoint, xScale, plot, pHeight, }) => {
+  config: any,
+  setConfig: (newConfig: any) => void,
+}> = ({ data, xPoint, yPoint, xScale, isEditing, setup, plot, config, setConfig }) => {
 
   let colors = ["#4285F4", "#DB4437", "#F4B400", "#0F9D58", "#4285F4"]
   let randIndex = Math.round(Math.random()*colors.length)
+
   return (
-    <ChartWrapper flexBasis={`${pHeight*100}%`} className="shown">
+    <ChartWrapper flexBasis={`${config.INNER_CHART_Y_RATIO || setup.INNER_CHART_Y_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >

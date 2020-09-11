@@ -37,8 +37,6 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
@@ -56,29 +54,33 @@ import {
 } from '@vx/legend';
 
 export const VizLegend: React.FC<{
-  pWidth: number,
-}> = ({ pWidth }) => {
-  const legendGlyphSize = 15;
+  isEditing: boolean,
+  setup: any,
+  plot: any,
+  config: any,
+  setConfig: (newConfig: any) => void,
+}> = ({ isEditing, setup, plot, config, setConfig }) => {
+
+  const legendGlyphSize = "1vw";
   const ordinalColorScale = scaleOrdinal<string, string>({
     domain: ['Biden', 'Trump'],
     range: ["#4285F4", "#DB4437"],
   });
 
   return (
-    <AxisWrapper flexBasis={`${pWidth*100}%`} className="shown">
+    <AxisWrapper flexBasis={`${config.LEGEND_X_RATIO || setup.LEGEND_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`}>
         {labels => (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', flexDirection: 'column'}}>
             {labels.map((label, i) => (
               <LegendItem
                 key={`legend-quantile-${i}`}
-                margin="0 5px"
                 onClick={() => {
                   console.log(label)
                 }}
               >
-                <svg width={legendGlyphSize} height={legendGlyphSize}>
-                  <rect fill={label.value} width={legendGlyphSize} height={legendGlyphSize} />
+                <svg height="10px">
+                  <rect fill={label.value} width={"10px"} height={"10px"} />
                 </svg>
                 <LegendLabel>
                   {label.text}

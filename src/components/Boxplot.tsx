@@ -38,8 +38,6 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import {  } from "../utils/routes"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
@@ -58,7 +56,8 @@ export const Boxplot: React.FC<{
   boxWidth: any,
   plot: any,
   pHeight: number,
-}> = ({ data, xScale, yScale, boxWidth, plot, pHeight, }) => {
+  isEditing: boolean,
+}> = ({ data, xScale, yScale, boxWidth, plot, pHeight, isEditing }) => {
 
   const x = (d: any) => d.boxPlot.x;
   const min = (d: any) => d.boxPlot.min;
@@ -78,12 +77,11 @@ export const Boxplot: React.FC<{
       enc > 0 && rollup.push({value:startIndex,count:enc})
       startIndex++;
     }
-    console.log(rollup)
     return rollup
   }
 
   return (
-    <ChartWrapper flexBasis={`${pHeight*100}%`} className="shown">
+    <ChartWrapper flexBasis={`${pHeight*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >
@@ -93,7 +91,7 @@ export const Boxplot: React.FC<{
                 <ViolinPlot
                   data={getSeries(d.binData)}
                   stroke={d.boxPlot.y === "Biden" ? "#4285F4" : "#DB4437"}
-                  left={d.boxPlot.y === "Biden" ? xScale(x(d))! + (0.3 * boxWidth) - 15 : xScale(x(d))! + (0.3 * boxWidth) + 15 }
+                  left={xScale(x(d))! + (0.3 * boxWidth)}
                   width={boxWidth*0.4}
                   valueScale={yScale}
                   fillOpacity={0.2}
@@ -102,7 +100,7 @@ export const Boxplot: React.FC<{
                 <BoxPlot
                   min={min(d)}
                   max={max(d)}
-                  left={d.boxPlot.y === "Biden" ? xScale(x(d))! + (0.425 * boxWidth) - 15 : xScale(x(d))! + (0.425 * boxWidth) + 15 }
+                  left={xScale(x(d))! + (0.425 * boxWidth)}
                   firstQuartile={firstQuartile(d)}
                   thirdQuartile={thirdQuartile(d)}
                   median={median(d)}

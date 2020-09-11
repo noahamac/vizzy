@@ -12,7 +12,7 @@ Problem: Using the extension framework, can we develop a visualization layer bas
   In manifest for a LookML project on your Looker instance:
 
   ```
-  application: data-dictionary-dev {
+  application: vizzy-dev {
     label: "Vizzy (dev)"
     uri: "https://localhost:8080/bundle.js"
   }

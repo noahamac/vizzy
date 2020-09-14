@@ -37,6 +37,7 @@ import {
   PopoverContent,
   Select,
   Space,
+  Slider,
   InlineInputText
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
@@ -58,30 +59,43 @@ export const YAxis: React.FC<{
 }> = ({ yScale, isEditing, setup, plot, config, setConfig, }) => {
 
   const defaults = {
-    fontSize: "large",
-    position: "center",
-    description: "",
-    descFontSize: "xsmall",
+    y_padding: 36,
+    y_fontSize: "medium",
+    y_label: "Hello world",
   }
-
-  useEffect(() => {
-    return () => {
-      setConfig({...defaults, ...config})
-    };
-  }, []);
 
   const configCard = isEditing && (
     <PopoverContent p="small" width="300px" height="auto">
       <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Title Position</Text>
+        <Text fontSize="xxsmall" variant="subdued">Y Label Padding</Text>
+        <Slider 
+          onChange={(e)=>{setConfig({...config, y_padding: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={70}
+          value={config.y_padding || defaults.y_padding} 
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Y Label Font Size</Text>
         <Select 
-          defaultValue={config.position || defaults.position} 
+          defaultValue={config.y_fontSize || defaults.y_fontSize} 
           options={[
-            { value: 'left', label: 'left' },
-            { value: 'center', label: 'center' },
-            { value: 'right', label: 'right' },
+            { value: 'xx-small', label: 'smallest' },
+            { value: 'x-small', label: 'smaller' },
+            { value: 'small', label: 'small' },
+            { value: 'medium', label: 'medium' },
+            { value: 'large', label: 'large' },
+            { value: 'x-large', label: 'larger' },
+            { value: 'xx-large', label: 'largest' },
           ]}
-          onChange={(e)=>{setConfig({...config, position: e})}}
+          onChange={(e)=>{setConfig({...config, y_fontSize: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Y Label Override</Text>
+        <InlineInputText 
+          value={config.y_label || setup.y_label} 
+          onChange={(e)=>{setConfig({...config, y_label: e.currentTarget.value})}}
         />
       </Space>
     </PopoverContent>
@@ -90,7 +104,7 @@ export const YAxis: React.FC<{
   return (
     <Popover content={configCard} placement="right-start">
     <AxisWrapper flexBasis={`${config.YAXIS_X_RATIO || setup.YAXIS_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
-      <svg
+        <svg
         style={{height: "100%"}}
         >
         <AxisLeft
@@ -99,7 +113,13 @@ export const YAxis: React.FC<{
           scale={yScale}
           stroke={"#282828"}
           tickStroke={"#282828"}
-          label={"nothing for now"}
+          label={config.y_label || setup.y_label}
+          labelOffset={config.y_padding || defaults.y_padding}
+          labelClassName={"y_label"}
+          labelProps={{
+            fontSize: config.y_fontSize || defaults.y_fontSize,
+            x: 0-plot.height*(config.INNER_CHART_Y_RATIO*0.5 || setup.INNER_CHART_Y_RATIO*0.5),
+          }}
         />
       </svg>
     </AxisWrapper>

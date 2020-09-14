@@ -33,7 +33,14 @@ import {
   Button,
   Spinner,
   Text,
-  theme,
+  Popover,
+  PopoverContent,
+  Select,
+  Space,
+  Slider,
+  InlineInputText,
+  InputColor,
+  SelectOptionProps,
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
@@ -58,7 +65,58 @@ export const BarChart: React.FC<{
   let colors = ["#4285F4", "#DB4437", "#F4B400", "#0F9D58", "#4285F4"]
   let randIndex = Math.round(Math.random()*colors.length)
 
+  const defaults = {
+    chart_fill: "#4285F4",
+  }
+
+  function getDimensions() {
+    let dims = Object.keys(data[0])
+    let dimsArr = dims.map((d: any, i: number) => {
+      return {value: i.toString(), label: d}
+    })
+    return dimsArr
+  }
+
+  const configCard = isEditing && (
+    <PopoverContent p="small" width="300px" height="auto">
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Chart fill</Text>
+        <InputColor 
+          onChange={(e)=>{setConfig({...config, chart_fill: e.currentTarget.value})}} 
+          defaultValue={config.chart_fill || defaults.chart_fill} 
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Number of Rows</Text>
+        <Slider 
+          onChange={(e)=>{setConfig({...config, data_rows: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={50}
+          value={config.data_rows || setup.data_rows} 
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">X Dimension</Text>
+        <Select 
+          defaultValue={config.data_x || setup.data_x} 
+          options={getDimensions()}
+          onChange={(e)=>{setConfig({...config, data_x: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Y Dimension</Text>
+        <Select 
+          defaultValue={config.data_y || setup.data_y} 
+          options={getDimensions()}
+          onChange={(e)=>{setConfig({...config, data_y: e})}}
+        />
+      </Space>
+    </PopoverContent>
+  )
+
+
   return (
+    <ChartPopover content={configCard} placement="top-start" focusTrap={false}>
     <ChartWrapper flexBasis={`${config.INNER_CHART_Y_RATIO || setup.INNER_CHART_Y_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
@@ -72,16 +130,21 @@ export const BarChart: React.FC<{
                 y={(plot.height*0.8) - barHeight}
                 height={barHeight}
                 width={xScale.bandwidth()*0.7}
-                fill={"#4285F4"}
+                fill={config.chart_fill || defaults.chart_fill}
               />
             </Group>
           );
         })}
       </svg>
     </ChartWrapper>
+    </ChartPopover>
   );
 }
 
 // @ts-ignore
 const ChartWrapper = styled(FlexItem)`
+`;
+
+const ChartPopover = styled(Popover)`
+  left: -310,
 `;

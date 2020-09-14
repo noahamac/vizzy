@@ -60,7 +60,8 @@ export function getConfig() {
     const initialize = async () => {
       let config
       config = await extensionSDK.getContextData()
-      setConfig(config || {})
+      config && config.stats_views ? config.stats_views = config.stats_views + 1 : config.stats_views = 1
+      addConfig(config || {})
     }
     initialize()
   }, [])

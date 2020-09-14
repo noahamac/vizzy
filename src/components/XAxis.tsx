@@ -33,7 +33,12 @@ import {
   Button,
   Spinner,
   Text,
-  theme,
+  Popover,
+  PopoverContent,
+  Select,
+  Space,
+  Slider,
+  InlineInputText
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
@@ -52,10 +57,61 @@ export const XAxis: React.FC<{
   config: any,
   setConfig: (newConfig: any) => void,
 }> = ({ xScale, isEditing, setup, plot, config, setConfig }) => {
+
+  const defaults = {
+    x_label_position: 'center',
+    x_fontSize: "medium",
+  }
+
+  const configCard = isEditing && (
+    <PopoverContent p="small" width="300px" height="auto">
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Axis Label Position</Text>
+        <Select 
+          defaultValue={config.x_label_position || defaults.x_label_position} 
+          options={[
+            { value: 'left', label: 'left' },
+            { value: 'center', label: 'center' },
+            { value: 'right', label: 'right' },
+          ]}
+          onChange={(e)=>{setConfig({...config, x_label_position: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">X Label Font Size</Text>
+        <Select 
+          defaultValue={config.x_fontSize || defaults.x_fontSize} 
+          options={[
+            { value: 'xx-small', label: 'smallest' },
+            { value: 'x-small', label: 'smaller' },
+            { value: 'small', label: 'small' },
+            { value: 'medium', label: 'medium' },
+            { value: 'large', label: 'large' },
+            { value: 'x-large', label: 'larger' },
+            { value: 'xx-large', label: 'largest' },
+          ]}
+          onChange={(e)=>{setConfig({...config, x_fontSize: e})}}
+        />
+      </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">X Label Override</Text>
+        <InlineInputText 
+          value={config.x_label || setup.x_label} 
+          onChange={(e)=>{setConfig({...config, x_label: e.currentTarget.value})}}
+        />
+      </Space>
+    </PopoverContent>
+  )
+
   return (
-    <AxisWrapper flexBasis={`${config.XAXIS_Y_RATIO || setup.XAXIS_Y_RATIO*100}%`} pt="xxsmall" className={isEditing ? "EDIT_MODE" : ""}>
+    <Popover content={configCard} placement="top-start">
+    <AxisWrapper 
+      flexBasis={`${config.XAXIS_Y_RATIO || setup.XAXIS_Y_RATIO*100}%`} 
+      pt="xxsmall" 
+      className={isEditing ? "EDIT_MODE" : ""}
+    >
       <svg
-        style={{height: "100%"}}
+        style={{height: "50%"}}
         >
         <AxisBottom
           left={0}
@@ -63,10 +119,20 @@ export const XAxis: React.FC<{
           scale={xScale}
           stroke={"#282828"}
           tickStroke={"#282828"}
-          label={"ok let's try"}
         />
       </svg>
+      <FlexItem 
+        width="100%"
+        textAlign={config.x_label_position || defaults.x_label_position}
+      >
+        <Text 
+          fontSize={config.x_fontSize || defaults.x_fontSize}
+        >
+          {config.x_label || setup.x_label}
+        </Text>
+      </FlexItem>
     </AxisWrapper>
+    </Popover>
   );
 }
 

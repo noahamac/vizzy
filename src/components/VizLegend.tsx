@@ -63,13 +63,13 @@ export const VizLegend: React.FC<{
 
   const legendGlyphSize = "1vw";
   const ordinalColorScale = scaleOrdinal<string, string>({
-    domain: ['Biden', 'Trump'],
-    range: ["#4285F4", "#DB4437"],
+    domain: ['Country'],
+    range: [config.chart_fill],
   });
 
   return (
     <AxisWrapper flexBasis={`${config.LEGEND_X_RATIO || setup.LEGEND_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
-      <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`}>
+      <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`} labelAlign={"left"}>
         {labels => (
           <div style={{ display: 'flex', flexDirection: 'column'}}>
             {labels.map((label, i) => (

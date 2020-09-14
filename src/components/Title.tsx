@@ -49,10 +49,10 @@ export const Title: React.FC<{
 }> = ({ content, isEditing, setup, plot, config, setConfig }) => {
 
   const defaults = {
-    fontSize: "large",
-    position: "center",
-    description: "",
-    descFontSize: "xsmall",
+    title_fontSize: "large",
+    title_position: "center",
+    title_description: "",
+    title_descFontSize: "xsmall",
   }
 
   const configCard = isEditing && (
@@ -60,26 +60,26 @@ export const Title: React.FC<{
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Title Position</Text>
         <Select 
-          defaultValue={config.position || defaults.position} 
+          defaultValue={config.title_position || defaults.title_position} 
           options={[
             { value: 'left', label: 'left' },
             { value: 'center', label: 'center' },
             { value: 'right', label: 'right' },
           ]}
-          onChange={(e)=>{setConfig({...config, position: e})}}
+          onChange={(e)=>{setConfig({...config, title_position: e})}}
         />
       </Space>
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Title Override</Text>
         <InlineInputText 
           value={config.title || content} 
-          onChange={(e)=>{setConfig({...config, title: e.currentTarget.value})}}
+          onChange={(e)=>{setConfig({...config, title_title: e.currentTarget.value})}}
         />
       </Space>
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Title Font Size</Text>
         <Select 
-          defaultValue={config.fontSize || defaults.fontSize} 
+          defaultValue={config.title_fontSize || defaults.title_fontSize} 
           options={[
             { value: 'small', label: 'small' },
             { value: 'medium', label: 'medium' },
@@ -87,26 +87,26 @@ export const Title: React.FC<{
             { value: 'xlarge', label: 'larger' },
             { value: 'xxlarge', label: 'largest' },
           ]}
-          onChange={(e)=>{setConfig({...config, fontSize: e})}}
+          onChange={(e)=>{setConfig({...config, title_fontSize: e})}}
         />
       </Space>
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Description</Text>
         <InlineTextArea 
-          value={config.description || defaults.description} 
-          onChange={(e)=>{setConfig({...config, description: e.currentTarget.value})}}
+          value={config.title_description || defaults.title_description} 
+          onChange={(e)=>{setConfig({...config, title_description: e.currentTarget.value})}}
         />
       </Space>
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Description Font Size</Text>
         <Select 
-          defaultValue={config.descFontSize || defaults.descFontSize} 
+          defaultValue={config.title_descFontSize || defaults.title_descFontSize} 
           options={[
             { value: 'xxsmall', label: 'smallest' },
             { value: 'xsmall', label: 'smaller' },
             { value: 'small', label: 'small' },
           ]}
-          onChange={(e)=>{setConfig({...config, descFontSize: e})}}
+          onChange={(e)=>{setConfig({...config, title_descFontSize: e})}}
         />
       </Space>
     </PopoverContent>
@@ -118,24 +118,24 @@ export const Title: React.FC<{
       <TitleWrapper 
         flexBasis={`${config.TITLE_Y_RATIO || setup.TITLE_Y_RATIO*100}%`} 
         width="100%"
-        textAlign={config.position || defaults.position}
+        textAlign={config.title_position || defaults.title_position}
         className={isEditing && "EDIT_MODE"}
       >
         <Text
           pt="small"
           pl="small" 
           pr="small" 
-          fontSize={config.fontSize || defaults.fontSize}
+          fontSize={config.title_fontSize || defaults.title_fontSize}
         >
           {config.title || content}
         </Text>
         <Paragraph 
           pl="small" 
           pr="small"
-          fontSize={config.descFontSize || defaults.descFontSize} 
+          fontSize={config.title_descFontSize || defaults.title_descFontSize} 
           variant="subdued"
         >
-          {config.description}
+          {config.title_description}
         </Paragraph>
       </TitleWrapper>
     </Popover>

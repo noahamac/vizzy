@@ -48,6 +48,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { BarChart } from "./BarChart";
+import { VizManager } from "./VizManager";
 import { Boxplot } from "./Boxplot";
 import { XAxis } from "./XAxis";
 import { YAxis } from "./YAxis";
@@ -55,7 +56,10 @@ import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
 
 function getBarChart(defaults: any, config: any, plot: any) {
-  let data = covid_country_deaths.filter((d,i)=>{return i<10})
+  const data_limit = config.rows || defaults.rows
+  let data = covid_country_deaths.filter((d,i)=>{return i<data_limit})
+
+  console.log(Object.keys(data[0] || {}))
 
   const x = (d: any) => d["Country"];
   const y = (d: any) => d["Deaths (Running Total)"];
@@ -143,12 +147,12 @@ export const Vizzy: React.FC<{}> = () => {
   const { config, addConfig } = getConfig()
 
   const plot = useWindowSize();
-  const LEGEND_X_RATIO = 0.1
-  const YAXIS_X_RATIO = 0.1
+  const LEGEND_X_RATIO = 0.10
+  const YAXIS_X_RATIO = 0.10
   const CHART_X_RATIO = 1 - LEGEND_X_RATIO - YAXIS_X_RATIO
 
   const TITLE_Y_RATIO = 0.1
-  const XAXIS_Y_RATIO = 0.1
+  const XAXIS_Y_RATIO = 0.12
   const INNER_CHART_Y_RATIO = 1 - XAXIS_Y_RATIO
   const CHART_Y_RATIO = 1 - XAXIS_Y_RATIO - TITLE_Y_RATIO
 
@@ -160,16 +164,49 @@ export const Vizzy: React.FC<{}> = () => {
     XAXIS_Y_RATIO: XAXIS_Y_RATIO,
     INNER_CHART_Y_RATIO: INNER_CHART_Y_RATIO,
     CHART_Y_RATIO: CHART_Y_RATIO,
+    data_rows: 10,
+    data_x: "0",
+    data_y: "1",
+    x_label: "",
+    y_label: "",
   }
 
-  const { data, x, y, xScale, yScale, xPoint, yPoint } = getBarChart(defaults, config, plot)
-  // const { xScale, yScale, data, boxWidth, x } = getBoxplot(plot, CHART_X_RATIO, CHART_Y_RATIO)
+  const data_limit = config.data_rows || defaults.data_rows
+  let data = covid_country_deaths.filter((d,i)=>{return i<data_limit})
+  let dimKeys = Object.keys(data[0] || {})
 
-  console.log(config)
+  const x = (d: any) => d[dimKeys[eval(config.data_x || defaults.data_x)]];
+  const y = (d: any) => d[dimKeys[eval(config.data_y || defaults.data_y)]];
+
+  defaults.x_label = dimKeys[eval(config.data_x || defaults.data_x)]
+  defaults.y_label = dimKeys[eval(config.data_y || defaults.data_y)]
+
+  const xScale = scaleBand({
+    range: [0, plot.width*(config.CHART_X_RATIO || defaults.CHART_X_RATIO)],
+    domain: data.map(x),
+  });
+
+  const yScale = scaleLinear({
+    range: [plot.height*(config.CHART_Y_RATIO || defaults.CHART_Y_RATIO), 0],
+    domain: [0, Math.max(...data.map(y))],
+  });
+
+  const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
+  const xPoint = compose(xScale, x);
+  const yPoint = compose(yScale, y);
 
   return (
     <ComponentsProvider>
-    {config && <Tile flexDirection="column" height="100%" p="xxxlarge">
+    {config && 
+    <>
+    <VizManager
+      isEditing={isEditing}
+      setup={defaults}
+      plot={plot}
+      config={config}
+      setConfig={addConfig}
+    />
+    <Tile flexDirection="column" height="100%" p="xxxlarge">
       <Title
         content="Polling Distributions"
         isEditing={isEditing}
@@ -225,7 +262,8 @@ export const Vizzy: React.FC<{}> = () => {
           setConfig={addConfig}
         />
       </Flex>
-    </Tile>}
+    </Tile>
+    </>}
     </ComponentsProvider>
   );
 }
@@ -235,10 +273,10 @@ const Tile = styled(Flex)`
   padding: 5px;
   .EDIT_MODE {
     border-radius: 5px;
-    box-shadow: 0px 0px 0px 1px #4285F4 inset;
+    box-shadow: 0px 0px 0px 1px ${theme.colors.key} inset;
   }
   .EDIT_MODE:hover {
     margin: 0.5%;
-    box-shadow: 0px 0px 0px 3px #4285F4 inset;
+    box-shadow: 0px 0px 0px 3px ${theme.colors.key} inset;
   }
 `;

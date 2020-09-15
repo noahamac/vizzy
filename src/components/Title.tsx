@@ -53,6 +53,7 @@ export const Title: React.FC<{
     title_position: "center",
     title_description: "",
     title_descFontSize: "xsmall",
+    title_color: "#4285F4",
   }
 
   const configCard = isEditing && (
@@ -109,6 +110,20 @@ export const Title: React.FC<{
           onChange={(e)=>{setConfig({...config, title_descFontSize: e})}}
         />
       </Space>
+      <Space mb="small">
+        <Text fontSize="xxsmall" variant="subdued">Title Color</Text>
+        <Select 
+          defaultValue={config.title_color || defaults.title_color} 
+          options={[
+            { value: 'small', label: 'small' },
+            { value: 'medium', label: 'medium' },
+            { value: 'large', label: 'large' },
+            { value: 'xlarge', label: 'larger' },
+            { value: 'xxlarge', label: 'largest' },
+          ]}
+          onChange={(e)=>{setConfig({...config, title_color: e})}}
+        />
+        </Space>
     </PopoverContent>
   )
 

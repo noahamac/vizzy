@@ -126,6 +126,7 @@ export const BarChart: React.FC<{
           return (
             <Group key={`bar-${i}`}>
               <Bar
+                id={String(i)}
                 x={xPoint(d)+(xScale.bandwidth()*0.15)}
                 y={(plot.height*0.8) - barHeight}
                 height={barHeight}

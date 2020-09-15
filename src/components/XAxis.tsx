@@ -47,13 +47,13 @@ import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
-import { AxisBottom } from '@vx/axis';
+import { AxisBottom, AxisLeft } from '@vx/axis';
 
 export const XAxis: React.FC<{
   xScale: any,
   isEditing: boolean,
   setup: any,
-  plot: any,
+  plot?: any,
   config: any,
   setConfig: (newConfig: any) => void,
 }> = ({ xScale, isEditing, setup, plot, config, setConfig }) => {

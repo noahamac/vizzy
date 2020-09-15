@@ -49,11 +49,13 @@ import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { BarChart } from "./BarChart";
 import { VizManager } from "./VizManager";
+import { VizTooltip } from "./Tooltip";
 import { Boxplot } from "./Boxplot";
 import { XAxis } from "./XAxis";
 import { YAxis } from "./YAxis";
 import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
+import { config } from "process";
 
 function getBarChart(defaults: any, config: any, plot: any) {
   const data_limit = config.rows || defaults.rows
@@ -120,8 +122,8 @@ function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
 function getScatter(config: any) {
   let data = covid_country_deaths.filter((d,i)=>{return i<10})
 
-  const x = (d: any) => d["Country"];
-  const y = (d: any) => d["Deaths (Running Total)"];
+  const x = (d: any) => d["Total Population"];
+  const y = (d: any) => d["Deaths per Million (Running Total)"];
 
   const xScale = scaleBand({
     range: [0, config.width*config.CHART_X_RATIO],
@@ -142,9 +144,13 @@ function getScatter(config: any) {
   return { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat }
 }
 
+
+
 export const Vizzy: React.FC<{}> = () => {
   const isEditing = useKeyPress("Escape");
   const { config, addConfig } = getConfig()
+
+  console.log(config);
 
   const plot = useWindowSize();
   const LEGEND_X_RATIO = 0.10
@@ -169,11 +175,14 @@ export const Vizzy: React.FC<{}> = () => {
     data_y: "1",
     x_label: "",
     y_label: "",
+    tooltip: { tooltipOn: false }
   }
 
   const data_limit = config.data_rows || defaults.data_rows
   let data = covid_country_deaths.filter((d,i)=>{return i<data_limit})
   let dimKeys = Object.keys(data[0] || {})
+
+  console.log('dimKeys',dimKeys)
 
   const x = (d: any) => d[dimKeys[eval(config.data_x || defaults.data_x)]];
   const y = (d: any) => d[dimKeys[eval(config.data_y || defaults.data_y)]];
@@ -206,47 +215,62 @@ export const Vizzy: React.FC<{}> = () => {
       config={config}
       setConfig={addConfig}
     />
-    <Tile flexDirection="column" height="100%" p="xxxlarge">
-      <Title
-        content="Polling Distributions"
-        isEditing={isEditing}
-        setup={defaults}
-        plot={plot}
-        config={config}
-        setConfig={addConfig}
-      />
-      <Flex flexBasis="90%">
-        <YAxis
-            yScale={yScale}
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
+    <VizTooltip
+      config={config}
+      setup={defaults}
+      isEditing={isEditing}
+      data={data}
+      chart={getScatter(config)}
+    >
+      <Tile flexDirection="column" height="100%" p="xxxlarge">
+        <Title
+          content="Polling Distributions"
+          isEditing={isEditing}
+          setup={defaults}
+          plot={plot}
+          config={config}
+          setConfig={addConfig}
         />
-        <Flex flexDirection="column" flexBasis={`${config.CHART_X_RATIO || defaults.CHART_X_RATIO * 100}%`}>
-          <BarChart
-            data={data}
-            xPoint={xPoint}
-            yPoint={yPoint}
-            xScale={xScale}
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
+        <Flex flexBasis="90%">
+          <YAxis
+              yScale={yScale}
+              isEditing={isEditing}
+              setup={defaults}
+              plot={plot}
+              config={config}
+              setConfig={addConfig}
           />
-          {/* <Boxplot
-            data={data}
-            xScale={xScale}
-            yScale={yScale}
-            boxWidth={boxWidth}
-            plot={plot}
-            pHeight={INNER_CHART_Y_RATIO}
-            isEditing={isEditing}
-          /> */}
-          <XAxis
-            xScale={xScale}
+          <Flex flexDirection="column" flexBasis={`${config.CHART_X_RATIO || defaults.CHART_X_RATIO * 100}%`}>
+            <BarChart
+              data={data}
+              xPoint={xPoint}
+              yPoint={yPoint}
+              xScale={xScale}
+              isEditing={isEditing}
+              setup={defaults}
+              plot={plot}
+              config={config}
+              setConfig={addConfig}
+            />
+            {/* <Boxplot
+              data={data}
+              xScale={xScale}
+              yScale={yScale}
+              boxWidth={boxWidth}
+              plot={plot}
+              pHeight={INNER_CHART_Y_RATIO}
+              isEditing={isEditing}
+            /> */}
+            <XAxis
+              xScale={xScale}
+              isEditing={isEditing}
+              setup={defaults}
+              plot={plot}
+              config={config}
+              setConfig={addConfig}
+            />
+          </Flex>
+          <VizLegend 
             isEditing={isEditing}
             setup={defaults}
             plot={plot}
@@ -254,15 +278,8 @@ export const Vizzy: React.FC<{}> = () => {
             setConfig={addConfig}
           />
         </Flex>
-        <VizLegend 
-          isEditing={isEditing}
-          setup={defaults}
-          plot={plot}
-          config={config}
-          setConfig={addConfig}
-        />
-      </Flex>
-    </Tile>
+      </Tile>
+    </VizTooltip>
     </>}
     </ComponentsProvider>
   );

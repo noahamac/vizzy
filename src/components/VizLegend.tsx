@@ -68,7 +68,7 @@ export const VizLegend: React.FC<{
   });
 
   return (
-    <AxisWrapper flexBasis={`${config.LEGEND_X_RATIO || setup.LEGEND_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <AxisWrapper flexBasis={`${config.LEGEND_X_RATIO || setup.LEGEND_X_RATIO*100}%`} ml={isEditing ? "" : "small"} className={isEditing ? "EDIT_MODE" : ""}>
       <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`} labelAlign={"left"}>
         {labels => (
           <div style={{ display: 'flex', flexDirection: 'column'}}>

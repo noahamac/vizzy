@@ -111,7 +111,6 @@ export const Title: React.FC<{
       </Space>
     </PopoverContent>
   )
-
   return (
     <>
     <Popover content={configCard} placement="bottom-start">

@@ -72,7 +72,6 @@ export const VizManager: React.FC<{
   setConfig: (newConfig: any) => void,
 }> = ({ isEditing, setup, plot, config, setConfig, }) => {
   const [action, setAction] = useState("")
-  const [components, setComponents] = useState([])
 
   const defaults = {
     manager: "vizzy"

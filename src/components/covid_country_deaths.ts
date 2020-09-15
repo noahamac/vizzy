@@ -559,7 +559,7 @@ export const covid_country_deaths = [
   {
     "Country": "Malawi",
     "Deaths (Running Total)": 173,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -775,7 +775,7 @@ export const covid_country_deaths = [
   {
     "Country": "South Sudan",
     "Deaths (Running Total)": 47,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -823,7 +823,7 @@ export const covid_country_deaths = [
   {
     "Country": "Lesotho",
     "Deaths (Running Total)": 31,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -907,7 +907,7 @@ export const covid_country_deaths = [
   {
     "Country": "Sao Tome and Principe",
     "Deaths (Running Total)": 15,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -967,7 +967,7 @@ export const covid_country_deaths = [
   {
     "Country": "Comoros",
     "Deaths (Running Total)": 7,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -985,7 +985,7 @@ export const covid_country_deaths = [
   {
     "Country": "Burma",
     "Deaths (Running Total)": 6,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1003,7 +1003,7 @@ export const covid_country_deaths = [
   {
     "Country": "Botswana",
     "Deaths (Running Total)": 3,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1021,7 +1021,7 @@ export const covid_country_deaths = [
   {
     "Country": "MS Zaandam",
     "Deaths (Running Total)": 2,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1033,13 +1033,13 @@ export const covid_country_deaths = [
   {
     "Country": "Western Sahara",
     "Deaths (Running Total)": 1,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Burundi",
     "Deaths (Running Total)": 1,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1057,19 +1057,19 @@ export const covid_country_deaths = [
   {
     "Country": "Iran (Islamic Republic of)",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Republic of Korea",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Russian Federation",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1081,7 +1081,7 @@ export const covid_country_deaths = [
   {
     "Country": "Saint Barthelemy",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1093,19 +1093,19 @@ export const covid_country_deaths = [
   {
     "Country": "Faroe Islands",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Hong Kong SAR",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Gibraltar",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1117,55 +1117,55 @@ export const covid_country_deaths = [
   {
     "Country": "Vatican City",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Channel Islands",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "St. Martin",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Saint Martin",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Republic of the Congo",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "French Guiana",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "East Timor",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Guernsey",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Curacao",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1177,13 +1177,13 @@ export const covid_country_deaths = [
   {
     "Country": "Guadeloupe",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Gambia, The",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1195,31 +1195,31 @@ export const covid_country_deaths = [
   {
     "Country": "The Gambia",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Jersey",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Martinique",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Guam",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Aruba",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1231,13 +1231,13 @@ export const covid_country_deaths = [
   {
     "Country": "Ivory Coast",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Puerto Rico",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1249,7 +1249,7 @@ export const covid_country_deaths = [
   {
     "Country": "Cape Verde",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1267,7 +1267,7 @@ export const covid_country_deaths = [
   {
     "Country": "Reunion",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1279,7 +1279,7 @@ export const covid_country_deaths = [
   {
     "Country": "Cayman Islands",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
@@ -1297,79 +1297,79 @@ export const covid_country_deaths = [
   {
     "Country": "Greenland",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Mainland China",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Macau",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Macao SAR",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Mayotte",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Republic of Moldova",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Taiwan",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Taipei and environs",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Hong Kong",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Others",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Cruise Ship",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "occupied Palestinian territory",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   },
   {
     "Country": "Palestine",
     "Deaths (Running Total)": 0,
-    "Deaths per Million (Running Total)": null,
+    "Deaths per Million (Running Total)": 0,
     "Total Population": 0
   }
 ]

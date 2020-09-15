@@ -91,7 +91,7 @@ export const BarChart: React.FC<{
         <Slider 
           onChange={(e)=>{setConfig({...config, data_rows: parseInt(e.currentTarget.value)})}} 
           min={0} 
-          max={50}
+          max={500}
           value={config.data_rows || setup.data_rows} 
         />
       </Space>
@@ -116,7 +116,7 @@ export const BarChart: React.FC<{
 
 
   return (
-    <ChartPopover content={configCard} placement="top-start" focusTrap={false}>
+    <Popover content={configCard} placement="right-start" focusTrap={false}>
     <ChartWrapper flexBasis={`${config.INNER_CHART_Y_RATIO || setup.INNER_CHART_Y_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
@@ -127,10 +127,10 @@ export const BarChart: React.FC<{
             <Group key={`bar-${i}`}>
               <Bar
                 id={String(i)}
-                x={xPoint(d)+(xScale.bandwidth()*0.15)}
+                x={xPoint(d)+(xScale.bandwidth()*0.2)}
                 y={(plot.height*0.8) - barHeight}
                 height={barHeight}
-                width={xScale.bandwidth()*0.7}
+                width={xScale.bandwidth()*0.8}
                 fill={config.chart_fill || defaults.chart_fill}
               />
             </Group>
@@ -138,7 +138,7 @@ export const BarChart: React.FC<{
         })}
       </svg>
     </ChartWrapper>
-    </ChartPopover>
+    </Popover>
   );
 }
 
@@ -146,6 +146,3 @@ export const BarChart: React.FC<{
 const ChartWrapper = styled(FlexItem)`
 `;
 
-const ChartPopover = styled(Popover)`
-  left: -310,
-`;

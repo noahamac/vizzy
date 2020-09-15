@@ -178,17 +178,28 @@ export const Vizzy: React.FC<{}> = () => {
     tooltip: { tooltipOn: false }
   }
 
+  function compare( a, b ) {
+    let yKey = dimKeys[config.data_y || defaults.data_y]
+    if ( a[yKey] < b[yKey] ){
+      return -1;
+    }
+    if ( a[yKey] > b[yKey] ){
+      return 1;
+    }
+    return 0;
+  }
+
   const data_limit = config.data_rows || defaults.data_rows
-  let data = covid_country_deaths.filter((d,i)=>{return i<data_limit})
+  let data = polls_flat.filter((d,i)=>{return i<data_limit})
   let dimKeys = Object.keys(data[0] || {})
 
-  console.log('dimKeys',dimKeys)
+  data = data.sort(compare)
 
-  const x = (d: any) => d[dimKeys[eval(config.data_x || defaults.data_x)]];
-  const y = (d: any) => d[dimKeys[eval(config.data_y || defaults.data_y)]];
+  const x = (d: any) => d[dimKeys[config.data_x || defaults.data_x]];
+  const y = (d: any) => d[dimKeys[config.data_y || defaults.data_y]];
 
-  defaults.x_label = dimKeys[eval(config.data_x || defaults.data_x)]
-  defaults.y_label = dimKeys[eval(config.data_y || defaults.data_y)]
+  defaults.x_label = dimKeys[config.data_x || defaults.data_x]
+  defaults.y_label = dimKeys[config.data_y || defaults.data_y]
 
   const xScale = scaleBand({
     range: [0, plot.width*(config.CHART_X_RATIO || defaults.CHART_X_RATIO)],
@@ -222,14 +233,23 @@ export const Vizzy: React.FC<{}> = () => {
       data={data}
       chart={getScatter(config)}
     >
-      <Tile flexDirection="column" height="100%" p="xxxlarge">
-        <Title
-          content="Polling Distributions"
-          isEditing={isEditing}
-          setup={defaults}
-          plot={plot}
-          config={config}
-          setConfig={addConfig}
+    <Tile flexDirection="column" height="100%" p="xxxlarge" mr={isEditing && "xxlarge"}>
+      <Title
+        content="Polling Distributions"
+        isEditing={isEditing}
+        setup={defaults}
+        plot={plot}
+        config={config}
+        setConfig={addConfig}
+      />
+      <Flex flexBasis="90%">
+        <YAxis
+            yScale={yScale}
+            isEditing={isEditing}
+            setup={defaults}
+            plot={plot}
+            config={config}
+            setConfig={addConfig}
         />
         <Flex flexBasis="90%">
           <YAxis
@@ -277,6 +297,7 @@ export const Vizzy: React.FC<{}> = () => {
             config={config}
             setConfig={addConfig}
           />
+         </Flex>
         </Flex>
       </Tile>
     </VizTooltip>

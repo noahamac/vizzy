@@ -7,7 +7,7 @@
     ],
     "sourceMap": true,
     "strict": false,
-    "strict0Checks": false,
+    "strictNullChecks": false,
     "esModuleInterop": true
   },
   "exclude": [

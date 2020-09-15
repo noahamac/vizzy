@@ -62,6 +62,7 @@ export const YAxis: React.FC<{
     y_padding: 36,
     y_fontSize: "medium",
     y_label: "Hello world",
+    yAxis_xRatio: 10,
   }
 
   const configCard = isEditing && (
@@ -98,12 +99,21 @@ export const YAxis: React.FC<{
           onChange={(e)=>{setConfig({...config, y_label: e.currentTarget.value})}}
         />
       </Space>
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">Y Axis Width</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, yAxis_xRatio: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={20}
+          value={config.yAxis_xRatio || setup.yAxis_xRatio} 
+        />
+      </Space>
     </PopoverContent>
   )
 
   return (
     <Popover content={configCard} placement="right-start">
-    <AxisWrapper flexBasis={`${config.YAXIS_X_RATIO || setup.YAXIS_X_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <AxisWrapper flexBasis={`${config.yAxis_xRatio || setup.yAxis_xRatio*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
         <svg
         style={{height: "100%"}}
         >

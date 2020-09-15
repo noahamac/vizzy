@@ -147,21 +147,21 @@ export const Vizzy: React.FC<{}> = () => {
   const { config, addConfig } = getConfig()
 
   const plot = useWindowSize();
-  const LEGEND_X_RATIO = 0.10
-  const YAXIS_X_RATIO = 0.10
-  const CHART_X_RATIO = 1 - LEGEND_X_RATIO - YAXIS_X_RATIO
+  const legend_xRatio = 0.10
+  const yAxis_xRatio = 0.10
+  const CHART_X_RATIO = 1 - legend_xRatio - yAxis_xRatio
 
-  const TITLE_Y_RATIO = 0.1
-  const XAXIS_Y_RATIO = 0.12
-  const INNER_CHART_Y_RATIO = 1 - XAXIS_Y_RATIO
-  const CHART_Y_RATIO = 1 - XAXIS_Y_RATIO - TITLE_Y_RATIO
+  const title_yRatio = 0.1
+  const xAxis_yRatio = 0.12
+  const INNER_CHART_Y_RATIO = 1 - xAxis_yRatio
+  const CHART_Y_RATIO = 1 - xAxis_yRatio - title_yRatio
 
   const defaults = {
-    LEGEND_X_RATIO: LEGEND_X_RATIO,
-    YAXIS_X_RATIO: YAXIS_X_RATIO,
+    legend_xRatio: legend_xRatio,
+    yAxis_xRatio: yAxis_xRatio,
     CHART_X_RATIO: CHART_X_RATIO,
-    TITLE_Y_RATIO: TITLE_Y_RATIO,
-    XAXIS_Y_RATIO: XAXIS_Y_RATIO,
+    title_yRatio: title_yRatio,
+    xAxis_yRatio: xAxis_yRatio,
     INNER_CHART_Y_RATIO: INNER_CHART_Y_RATIO,
     CHART_Y_RATIO: CHART_Y_RATIO,
     data_rows: 10,

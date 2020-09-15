@@ -34,6 +34,7 @@ import {
   InlineInputText,
   InlineTextArea,
   Space,
+  Slider,
   Popover,
   PopoverContent,
 } from "@looker/components";
@@ -53,7 +54,6 @@ export const Title: React.FC<{
     title_position: "center",
     title_description: "",
     title_descFontSize: "xsmall",
-    title_color: "#4285F4",
   }
 
   const configCard = isEditing && (
@@ -111,19 +111,14 @@ export const Title: React.FC<{
         />
       </Space>
       <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Title Color</Text>
-        <Select 
-          defaultValue={config.title_color || defaults.title_color} 
-          options={[
-            { value: 'small', label: 'small' },
-            { value: 'medium', label: 'medium' },
-            { value: 'large', label: 'large' },
-            { value: 'xlarge', label: 'larger' },
-            { value: 'xxlarge', label: 'largest' },
-          ]}
-          onChange={(e)=>{setConfig({...config, title_color: e})}}
+      <Text fontSize="xxsmall" variant="subdued">Title Height</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, title_yRatio: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={20}
+          value={config.title_yRatio || setup.title_yRatio} 
         />
-        </Space>
+      </Space>
     </PopoverContent>
   )
 
@@ -131,7 +126,7 @@ export const Title: React.FC<{
     <>
     <Popover content={configCard} placement="bottom-start">
       <TitleWrapper 
-        flexBasis={`${config.TITLE_Y_RATIO || setup.TITLE_Y_RATIO*100}%`} 
+        flexBasis={`${config.title_yRatio || setup.title_yRatio*100}%`} 
         width="100%"
         textAlign={config.title_position || defaults.title_position}
         className={isEditing && "EDIT_MODE"}

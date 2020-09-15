@@ -61,6 +61,7 @@ export const XAxis: React.FC<{
   const defaults = {
     x_label_position: 'center',
     x_fontSize: "medium",
+    xAxis_yRatio: 6,
   }
 
   const configCard = isEditing && (
@@ -100,13 +101,22 @@ export const XAxis: React.FC<{
           onChange={(e)=>{setConfig({...config, x_label: e.currentTarget.value})}}
         />
       </Space>
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">X Axis Height</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, xAxis_yRatio: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={20}
+          value={config.xAxis_yRatio || setup.xAxis_yRatio} 
+        />
+      </Space>
     </PopoverContent>
   )
 
   return (
     <Popover content={configCard} placement="top-start">
     <AxisWrapper 
-      flexBasis={`${config.XAXIS_Y_RATIO || setup.XAXIS_Y_RATIO*100}%`} 
+      flexBasis={`${config.xAxis_yRatio || setup.xAxis_yRatio*100}%`} 
       pt="xxsmall" 
       className={isEditing ? "EDIT_MODE" : ""}
     >

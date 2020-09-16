@@ -1,4 +1,8 @@
-# Data Dictionary Extension
+# Vizzy
+
+_Functionally composable and highly configurable visualizations for Looker._
+
+Problem: Using the extension framework, can we develop a visualization layer based on React components that is highly configurable, functionally composable, and leverages adjacent front end infrastructure to create an experience that is insightful, intuitive, and delightful? 
 
 ## Usage
 
@@ -8,8 +12,8 @@
   In manifest for a LookML project on your Looker instance:
 
   ```
-  application: data-dictionary-dev {
-    label: "Data Dictionary (dev)"
+  application: vizzy-dev {
+    label: "Vizzy (dev)"
     uri: "https://localhost:8080/bundle.js"
   }
   ```
@@ -27,7 +31,7 @@
 
 
 
-# Looker Data Dictionary Extension
+# Vizzy
 
 It uses [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlang.org/) for writing your extension, the [React Extension SDK](https://github.com/looker-open-source/extension-sdk-react) for interacting with Looker, and [Webpack](https://webpack.js.org/) for building your code.
 
@@ -67,8 +71,8 @@ It uses [React](https://reactjs.org/) and [TypeScript](https://www.typescriptlan
     You can either drag & upload this file into your Looker project, or create a `manifest.lkml` with the same content. Change the `id`, `label`, or `url` as needed.
 
     ```
-    application: data-dictionary {
-      label: "Data Dictionary"
+    application: vizzy {
+      label: "Vizzy"
       url: "http://localhost:8080/bundle.js"
     }
     ```

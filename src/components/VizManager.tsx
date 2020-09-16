@@ -50,6 +50,8 @@ import {
   ActionListColumns,
   ActionListItemAction,
   Card,
+  ToggleSwitch,
+  Label,
   theme,
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
@@ -60,6 +62,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisLeft } from '@vx/axis';
+import { TooltipMenu } from './VizTooltip'
 import { Gritty } from './Gritty';
 import { Clippy } from './Clippy';
 
@@ -125,6 +128,7 @@ export const VizManager: React.FC<{
         <ButtonOutline fullWidth>Add a control</ButtonOutline>
         <ButtonOutline fullWidth onClick={()=>{setAction("stats")}}>Show me some stats</ButtonOutline>
         <ButtonOutline fullWidth onClick={()=>{setAction("set_styles")}}>Apply styles for me</ButtonOutline>
+        <ButtonOutline fullWidth onClick={()=>{setAction("config_tooltip")}}>Configure Tooltip</ButtonOutline>
         </>
       )
     } else if (actionType === "see_configuration") {
@@ -161,6 +165,19 @@ export const VizManager: React.FC<{
       )
 
     }
+
+    else if (actionType === "config_tooltip") {
+        return (<>
+          <ButtonOutline mb="medium" fullWidth onClick={()=>{setAction("")}}>Back to Menu</ButtonOutline> 
+          <TooltipMenu 
+            config={config}
+            setup={setup}
+            setConfig={setConfig}
+          />
+        </>
+        )
+    }
+  
     else if (actionType === "set_styles") {
       return (<>
         <ButtonOutline mb="medium" fullWidth onClick={()=>{setAction("")}}>Back to Menu</ButtonOutline>

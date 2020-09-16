@@ -55,6 +55,7 @@ import { XAxis } from "./XAxis";
 import { YAxis } from "./YAxis";
 import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
+import { VizTooltip } from './VizTooltip';
 
 function getBarChart(defaults: any, config: any, plot: any) {
   const data_limit = config.rows || defaults.rows
@@ -172,6 +173,7 @@ export const Vizzy: React.FC<{}> = () => {
     y_label: "",
     chart_background: "#FFFFF",
     chart_fontColor: "#282828",
+    tooltip: {tooltipOn: false}
 
   }
 
@@ -246,6 +248,12 @@ export const Vizzy: React.FC<{}> = () => {
       config={config}
       setConfig={addConfig}
     />
+    <VizTooltip
+      config={config}
+      isEditing={isEditing}
+      setup={defaults}
+      data={data}
+    >
     <Tile 
       flexDirection="column" 
       height="100%" 
@@ -310,6 +318,7 @@ export const Vizzy: React.FC<{}> = () => {
         />
       </Flex>
     </Tile>
+    </VizTooltip>
     </>}
     </ComponentsProvider>
   );

@@ -43,6 +43,7 @@ import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import { july_dist } from "./polls_july";
 import { polls_flat } from "./polls_flat";
+import { weekly_avg } from "./weekly_avg";
 import {  } from "@looker/sdk";
 import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
@@ -162,21 +163,21 @@ export const Vizzy: React.FC<{}> = () => {
   console.log(config);
 
   const plot = useWindowSize();
-  const LEGEND_X_RATIO = 0.10
-  const YAXIS_X_RATIO = 0.10
-  const CHART_X_RATIO = 1 - LEGEND_X_RATIO - YAXIS_X_RATIO
+  const legend_xRatio = 0.10
+  const yAxis_xRatio = 0.10
+  const CHART_X_RATIO = 1 - legend_xRatio - yAxis_xRatio
 
-  const TITLE_Y_RATIO = 0.1
-  const XAXIS_Y_RATIO = 0.12
-  const INNER_CHART_Y_RATIO = 1 - XAXIS_Y_RATIO
-  const CHART_Y_RATIO = 1 - XAXIS_Y_RATIO - TITLE_Y_RATIO
+  const title_yRatio = 0.1
+  const xAxis_yRatio = 0.12
+  const CHART_Y_RATIO = 1 - title_yRatio
+  const INNER_CHART_Y_RATIO = 1 - xAxis_yRatio - title_yRatio
 
   const defaults = {
-    LEGEND_X_RATIO: LEGEND_X_RATIO,
-    YAXIS_X_RATIO: YAXIS_X_RATIO,
+    legend_xRatio: legend_xRatio,
+    y_xRatio: yAxis_xRatio,
     CHART_X_RATIO: CHART_X_RATIO,
-    TITLE_Y_RATIO: TITLE_Y_RATIO,
-    XAXIS_Y_RATIO: XAXIS_Y_RATIO,
+    title_yRatio: title_yRatio,
+    xAxis_yRatio: xAxis_yRatio,
     INNER_CHART_Y_RATIO: INNER_CHART_Y_RATIO,
     CHART_Y_RATIO: CHART_Y_RATIO,
     data_rows: 10,
@@ -184,11 +185,14 @@ export const Vizzy: React.FC<{}> = () => {
     data_y: "1",
     x_label: "",
     y_label: "",
-    tooltip: { tooltipOn: false }
+    tooltip: { tooltipOn: false },
+    chart_background: "#FFFFF",
+    chart_fontColor: "#282828",
+
   }
 
   function compare( a, b ) {
-    let yKey = dimKeys[config.data_y || defaults.data_y]
+    let yKey = dimKeys[config.data_x || defaults.data_x]
     if ( a[yKey] < b[yKey] ){
       return -1;
     }
@@ -199,7 +203,9 @@ export const Vizzy: React.FC<{}> = () => {
   }
 
   const data_limit = config.data_rows || defaults.data_rows
-  let data = polls_flat.filter((d,i)=>{return i<data_limit})
+  let data = weekly_avg.filter((d,i)=>{
+    return i<data_limit
+  })
   let dimKeys = Object.keys(data[0] || {})
 
   data = data.sort(compare)
@@ -210,14 +216,35 @@ export const Vizzy: React.FC<{}> = () => {
   defaults.x_label = dimKeys[config.data_x || defaults.data_x]
   defaults.y_label = dimKeys[config.data_y || defaults.data_y]
 
+  function getChartXRatio() {
+    let legend_x = (config.legend_xRatio || defaults.legend_xRatio)
+    let yAxis_x = (config.y_xRatio || defaults.y_xRatio)
+    const chart_x = 1 - legend_x - yAxis_x
+    return chart_x * 100
+  }
+
+  function getChartYRatio() {
+    let title_y = (config.title_yRatio || defaults.title_yRatio)
+    const chart_y = 1 - title_y
+    return chart_y * 100
+  }
+
+  function getInnerChartYRatio() {
+    let xaxis_y = (config.xAxis_yRatio || defaults.xAxis_yRatio)
+    let title_y = (config.title_yRatio || defaults.title_yRatio)
+    const chart_inner_y = 1 - xaxis_y - title_y
+    return chart_inner_y * 100
+  }
+
   const xScale = scaleBand({
-    range: [0, plot.width*(config.CHART_X_RATIO || defaults.CHART_X_RATIO)],
+    range: [0, plot.width*(getChartXRatio()/100)*0.9],
     domain: data.map(x),
   });
 
   const yScale = scaleLinear({
-    range: [plot.height*(config.CHART_Y_RATIO || defaults.CHART_Y_RATIO), 0],
-    domain: [0, Math.max(...data.map(y))],
+    range: [plot.height*(getInnerChartYRatio()/100), 0],
+    domain: [0, 55],
+    // domain: [0, Math.max(...data.map(y))],
   });
 
   const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
@@ -242,7 +269,13 @@ export const Vizzy: React.FC<{}> = () => {
       data={data}
       chart={getScatter(config)}
     >
-    <Tile flexDirection="column" height="100%" p="xxxlarge" mr={isEditing && "xxlarge"}>
+    <Tile 
+      flexDirection="column" 
+      height="100%" 
+      p="xxxlarge" 
+      mr={isEditing && "10%"}
+      backgroundColor={config.chart_background || defaults.chart_background}
+    >
       <Title
         content="Polling Distributions"
         isEditing={isEditing}
@@ -251,14 +284,26 @@ export const Vizzy: React.FC<{}> = () => {
         config={config}
         setConfig={addConfig}
       />
-        <Flex flexBasis="90%">
-          <YAxis
-              yScale={yScale}
-              isEditing={isEditing}
-              setup={defaults}
-              plot={plot}
-              config={config}
-              setConfig={addConfig}
+      <Flex flexBasis={`${getChartYRatio()}%`}>
+        <YAxis
+            yScale={yScale}
+            isEditing={isEditing}
+            setup={defaults}
+            plot={plot}
+            config={config}
+            setConfig={addConfig}
+        />
+        <Flex flexDirection="column" flexBasis={`${getChartXRatio()}%`}>
+          <BarChart
+            data={data}
+            xPoint={xPoint}
+            yPoint={yPoint}
+            xScale={xScale}
+            isEditing={isEditing}
+            setup={defaults}
+            plot={plot}
+            config={config}
+            setConfig={addConfig}
           />
           <Flex flexDirection="column" flexBasis={`${config.CHART_X_RATIO || defaults.CHART_X_RATIO * 100}%`}>
             <BarChart
@@ -290,15 +335,17 @@ export const Vizzy: React.FC<{}> = () => {
               setConfig={addConfig}
             />
           </Flex>
-          <VizLegend 
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
-          />
-         </Flex>
-      </Tile>
+        </Flex>
+        <VizLegend 
+          isEditing={isEditing}
+          data={data}
+          setup={defaults}
+          plot={plot}
+          config={config}
+          setConfig={addConfig}
+        />
+      </Flex>
+    </Tile>
     </VizTooltip>
     </>}
     </ComponentsProvider>

@@ -138,6 +138,14 @@ export const VizTooltip: React.FC<{
         }
     }
 
+    const cleanDatum = (datum) => {
+        let s = ""
+        for(let d in datum){
+            s += `${d}: ${datum[d]}`
+        }
+        return s
+    }
+
     if(showTooltip.show){
         if(config.tooltip.type === 'scatter'){ 
             return (
@@ -162,7 +170,9 @@ export const VizTooltip: React.FC<{
                 <div onMouseMove={(e) => setFromEvent(e)}>
                     <TooltipTarget>
                         <TooltipTextContent>
-                        {JSON.stringify(showTooltip.datum)}
+                        {
+                            cleanDatum(showTooltip.datum)
+                        }
                         </TooltipTextContent>
                     </TooltipTarget>
                     { children }

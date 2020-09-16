@@ -49,7 +49,7 @@ import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { BarChart } from "./BarChart";
 import { VizManager } from "./VizManager";
-import { VizTooltip } from "./Tooltip";
+import { VizTooltip } from "./VizTooltip";
 import { Boxplot } from "./Boxplot";
 import { XAxis } from "./XAxis";
 import { YAxis } from "./YAxis";
@@ -120,28 +120,37 @@ function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
 }
 
 function getScatter(config: any) {
-  let data = covid_country_deaths.filter((d,i)=>{return i<10})
+  //let data = covid_country_deaths.filter((d,i)=>{return i<10})
+  const data_limit = config.data_rows 
+  let data = polls_flat.filter((d,i)=>{return i<data_limit})
+  const x = (d: any) => d["Polls Biden Avg"];
+  const y = (d: any) => d["Polls Trump Avg"];
 
-  const x = (d: any) => d["Total Population"];
-  const y = (d: any) => d["Deaths per Million (Running Total)"];
-
-  const xScale = scaleBand({
+  // const xScale = scaleBand({
+  //   range: [0, config.width*config.CHART_X_RATIO],
+  //   domain: data.map(x),
+  // });
+  const _xScale = {
     range: [0, config.width*config.CHART_X_RATIO],
     domain: data.map(x),
-  });
+  };
 
   const xTickFormat = (v: number) => v
 
-  const yScale = scaleLinear({
+  // const yScale = scaleLinear({
+  //   range: [config.height*config.CHART_Y_RATIO, 0],
+  //   domain: [0, Math.max(...data.map(y))],
+  // });
+  const _yScale = {
     range: [config.height*config.CHART_Y_RATIO, 0],
     domain: [0, Math.max(...data.map(y))],
-  });
+  };
 
   const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
-  const xPoint = compose(xScale, x);
-  const yPoint = compose(yScale, y);
+  const xPoint = compose(_xScale, x);
+  const yPoint = compose(_yScale, y);
 
-  return { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat }
+  return { data, x, y, _xScale, _yScale, compose, xPoint, yPoint, xTickFormat }
 }
 
 
@@ -242,15 +251,6 @@ export const Vizzy: React.FC<{}> = () => {
         config={config}
         setConfig={addConfig}
       />
-      <Flex flexBasis="90%">
-        <YAxis
-            yScale={yScale}
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
-        />
         <Flex flexBasis="90%">
           <YAxis
               yScale={yScale}
@@ -298,7 +298,6 @@ export const Vizzy: React.FC<{}> = () => {
             setConfig={addConfig}
           />
          </Flex>
-        </Flex>
       </Tile>
     </VizTooltip>
     </>}

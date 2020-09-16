@@ -62,7 +62,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisLeft } from '@vx/axis';
-import { TooltipMenu } from './Tooltip'
+import { TooltipMenu } from './VizTooltip'
 
 export const VizManager: React.FC<{
   isEditing: boolean,

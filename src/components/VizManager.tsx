@@ -226,7 +226,7 @@ export const VizManager: React.FC<{
   }
 
   const configCard = isEditing && (
-    <PopoverContent p="small" width="300px" height="200px">
+    <PopoverContent p="small" width="300px" height="240px">
       {getAction(action)}
     </PopoverContent>
   )

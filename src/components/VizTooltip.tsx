@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled  from "styled-components";
 import { TooltipScatter } from "./TooltipScatter"
+import { TooltipBoxplot } from "./TooltipBoxplot"
+import { boxData } from './tooltipbox'
 import { scaleLinear, scaleBand } from '@vx/scale';
+
 import {
     ButtonOutline,
     ToggleSwitch,
@@ -17,6 +20,8 @@ export const TooltipMenu: React.FC<{
     setup: any,
     setConfig: (newConfig: any) => void
 }> = ({ config, setup, setConfig }) => {
+
+    
 
     const toggle = config?.tooltip?.tooltipOn || setup.tooltip.tooltipOn
     const toggleTooltip = (e) => setConfig({...config, tooltip: {...config.tooltip, tooltipOn: e.target.checked} })
@@ -96,6 +101,8 @@ export const VizTooltip: React.FC<{
         return(<>{ children }</>)
     }
 
+    console.log(config)
+
     const [position, setPosition] = useState({x: Math.random(), y: Math.random()})
     const [showTooltip, setShowTooltip] = useState({show: false, datum: {}, id:null})
     const height = config.tooltip.type === "text" ? 55 : 300;
@@ -124,11 +131,13 @@ export const VizTooltip: React.FC<{
  
     const TooltipTextContent = styled.div`
         color: rgb(255, 255, 255);
-        white-space:pre-wrap;
         font-size: 12px;
         display: block;
         white-space: pre-line;
         padding: 5px;
+        z-index: -10000
+        float: left;
+        margin-bottom: -150px
     `
 
     const setFromEvent = (e) => { 
@@ -143,10 +152,22 @@ export const VizTooltip: React.FC<{
     const cleanDatum = (datum) => {
         let s = ""
         for(let d in datum){
-            if(d == 'Polls Start Week'){
+            if(typeof(datum[d]) !== 'number'){
                 s += `${d}: ${(datum[d])}\n`
             } else {
                 s += `${d}: ${(datum[d].toFixed(2))}%\n`
+            }
+        }
+        return s
+    }
+
+    const cleanDatumBox = (datum) => {
+        let s = ""
+        for(let d in datum){
+            if(d == "Start Week"){
+                s += `${d}: ${(datum[d])}\n`
+            } else {
+                s += `${d}: ${(datum[d]['Campaign']['Biden'])}\n`
             }
         }
         return s
@@ -157,6 +178,7 @@ export const VizTooltip: React.FC<{
             return (
                 <div onMouseMove={(e) => setFromEvent(e)}>
                     <TooltipTarget>
+                        
                         <TooltipScatter 
                             data={data}
                             height={height}
@@ -170,7 +192,31 @@ export const VizTooltip: React.FC<{
                 </div>
             )
         } else if(config.tooltip.type === 'box_plot') {
-            return(<></>)
+            return(
+                <div onMouseMove={(e) => setFromEvent(e)}>
+                    <TooltipTarget>
+                        <TooltipTextContent>
+                        {
+                            cleanDatumBox(boxData[showTooltip.id])
+                        }
+                        </TooltipTextContent>
+                        <div style={{zIndex: -10000}}>
+                        <TooltipBoxplot 
+                            data={boxData}
+                            height={height}
+                            width={width}
+                            id={showTooltip.id}
+                            rep={config.data_y === "1" ? "Biden" : "Trump"}
+                            // id={showTooltip.id}
+                            // fieldX={"Biden Average"}
+                            // fieldY={"Trump Average"}
+                        />
+                        </div>
+                    </TooltipTarget>
+                    { children }
+                </div>
+
+            )
         } else {
             return (
                 <div onMouseMove={(e) => setFromEvent(e)}>

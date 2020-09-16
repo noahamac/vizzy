@@ -114,7 +114,7 @@ export const VizTooltip: React.FC<{
         background-color: rgb(38, 45, 51);
         box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 18px, rgba(0, 0, 0, 0.04) 0px 1px 4px;
         width: ${width}px;
-        height: ${height}px;
+        height: auto;
         justify-content: center;
         border-radius: 6px;
         ::after {
@@ -134,10 +134,10 @@ export const VizTooltip: React.FC<{
         font-size: 12px;
         display: block;
         white-space: pre-line;
+        padding: 5px;
         z-index: -10000
         float: left;
         margin-bottom: -150px
-        
     `
 
     const setFromEvent = (e) => { 

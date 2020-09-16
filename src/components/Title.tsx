@@ -34,6 +34,7 @@ import {
   InlineInputText,
   InlineTextArea,
   Space,
+  Slider,
   Popover,
   PopoverContent,
 } from "@looker/components";
@@ -109,13 +110,22 @@ export const Title: React.FC<{
           onChange={(e)=>{setConfig({...config, title_descFontSize: e})}}
         />
       </Space>
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">Title Height</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, title_yRatio: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={20}
+          value={config.title_yRatio || setup.title_yRatio} 
+        />
+      </Space>
     </PopoverContent>
   )
   return (
     <>
     <Popover content={configCard} placement="bottom-start">
       <TitleWrapper 
-        flexBasis={`${config.TITLE_Y_RATIO || setup.TITLE_Y_RATIO*100}%`} 
+        flexBasis={`${config.title_yRatio || setup.title_yRatio*100}%`} 
         width="100%"
         textAlign={config.title_position || defaults.title_position}
         className={isEditing && "EDIT_MODE"}

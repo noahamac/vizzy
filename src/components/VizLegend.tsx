@@ -32,7 +32,11 @@ import {
   Heading,
   Button,
   Spinner,
+  Popover,
+  PopoverContent,
   Text,
+  Space,
+  Slider,
   theme,
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
@@ -67,8 +71,27 @@ export const VizLegend: React.FC<{
     range: [config.chart_fill],
   });
 
+  const defaults = {
+    legend_xRatio: 6,
+  }
+
+  const configCard = isEditing && (
+    <PopoverContent p="small" width="300px" height="auto">
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">Legend Width</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, legend_xRatio: parseInt(e.currentTarget.value)})}} 
+          min={0} 
+          max={20}
+          value={config.legend_xRatio || setup.legend_xRatio} 
+        />
+      </Space>
+    </PopoverContent>
+  )
+
   return (
-    <AxisWrapper flexBasis={`${config.LEGEND_X_RATIO || setup.LEGEND_X_RATIO*100}%`} ml={isEditing ? "" : "small"} className={isEditing ? "EDIT_MODE" : ""}>
+    <Popover content={configCard} placement="top-start">
+    <AxisWrapper flexBasis={`${config.legend_xRatio || setup.legend_xRatio*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`} labelAlign={"left"}>
         {labels => (
           <div style={{ display: 'flex', flexDirection: 'column'}}>
@@ -91,6 +114,7 @@ export const VizLegend: React.FC<{
         )}
       </LegendOrdinal>
     </AxisWrapper>
+    </Popover>
   );
 }
 

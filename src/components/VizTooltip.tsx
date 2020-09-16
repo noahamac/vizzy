@@ -114,9 +114,10 @@ export const VizTooltip: React.FC<{
         background-color: rgb(38, 45, 51);
         box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 18px, rgba(0, 0, 0, 0.04) 0px 1px 4px;
         width: ${width}px;
-        height: auto;
+        height: ${height}px;
         justify-content: center;
         border-radius: 6px;
+        z-index: 1000
         ::after {
             content: "";
             position: absolute;
@@ -135,7 +136,6 @@ export const VizTooltip: React.FC<{
         display: block;
         white-space: pre-line;
         padding: 5px;
-        z-index: -10000
         float: left;
         margin-bottom: -150px
     `
@@ -200,7 +200,7 @@ export const VizTooltip: React.FC<{
                             cleanDatumBox(boxData[showTooltip.id])
                         }
                         </TooltipTextContent>
-                        <div style={{zIndex: -10000}}>
+                        <div style={{zIndex: 10000}}>
                         <TooltipBoxplot 
                             data={boxData}
                             height={height}

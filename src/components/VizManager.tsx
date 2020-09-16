@@ -127,9 +127,8 @@ export const VizManager: React.FC<{
         <ButtonOutline fullWidth>Watch something for me</ButtonOutline>
         <ButtonOutline fullWidth>Add a control</ButtonOutline>
         <ButtonOutline fullWidth onClick={()=>{setAction("stats")}}>Show me some stats</ButtonOutline>
-        <ButtonOutline fullWidth>Apply styles for me</ButtonOutline>
-        <ButtonOutline fullWidth onClick={()=>{setAction("config_tooltip")}}>Configure Tooltip</ButtonOutline>
         <ButtonOutline fullWidth onClick={()=>{setAction("set_styles")}}>Apply styles for me</ButtonOutline>
+        <ButtonOutline fullWidth onClick={()=>{setAction("config_tooltip")}}>Configure Tooltip</ButtonOutline>
         </>
       )
     } else if (actionType === "see_configuration") {

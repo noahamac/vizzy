@@ -19,6 +19,7 @@ export const TooltipScatter: React.FC<{
     
     const x = (d: any) => d[fieldX];
     const y = (d: any) => d[fieldY];
+    data = data.filter(e => e[fieldX] !== null)
     
     const svgRef = useRef<SVGSVGElement>(null);
     const xScale = useMemo(

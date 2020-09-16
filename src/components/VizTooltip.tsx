@@ -98,8 +98,8 @@ export const VizTooltip: React.FC<{
 
     const [position, setPosition] = useState({x: Math.random(), y: Math.random()})
     const [showTooltip, setShowTooltip] = useState({show: false, datum: {}, id:null})
-    const height = config.tooltip.type === "text" ? 100 : 300;
-    const width = 300;
+    const height = config.tooltip.type === "text" ? 55 : 300;
+    const width = config.tooltip.type === "text" ? 175 : 300;
     const TooltipTarget = styled.div`
         position: absolute;
         left: ${position.x+15}px
@@ -127,6 +127,7 @@ export const VizTooltip: React.FC<{
         white-space:pre-wrap;
         font-size: 12px;
         display: block;
+        white-space: pre-line;
     `
 
     const setFromEvent = (e) => { 
@@ -141,7 +142,11 @@ export const VizTooltip: React.FC<{
     const cleanDatum = (datum) => {
         let s = ""
         for(let d in datum){
-            s += `${d}: ${datum[d]}`
+            if(d == 'Polls Start Week'){
+                s += `${d}: ${(datum[d])}\n`
+            } else {
+                s += `${d}: ${(datum[d].toFixed(2))}%\n`
+            }
         }
         return s
     }
@@ -156,8 +161,8 @@ export const VizTooltip: React.FC<{
                             height={height}
                             width={width}
                             id={showTooltip.id}
-                            fieldX={"Polls Trump Avg"}
-                            fieldY={"Polls Biden Avg"}
+                            fieldX={"Biden Average"}
+                            fieldY={"Trump Average"}
                         />
                     </TooltipTarget>
                     { children }

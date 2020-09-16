@@ -73,7 +73,7 @@ export const Title: React.FC<{
       <Space mb="small">
         <Text fontSize="xxsmall" variant="subdued">Title Override</Text>
         <InlineInputText 
-          value={config.title || content} 
+          value={config.title_title || content} 
           onChange={(e)=>{setConfig({...config, title_title: e.currentTarget.value})}}
         />
       </Space>
@@ -113,10 +113,10 @@ export const Title: React.FC<{
       <Space mb="small">
       <Text fontSize="xxsmall" variant="subdued">Title Height</Text>
       <Slider
-          onChange={(e)=>{setConfig({...config, title_yRatio: parseInt(e.currentTarget.value)})}} 
+          onChange={(e)=>{setConfig({...config, title_yRatio: parseInt(e.currentTarget.value)/100})}} 
           min={0} 
           max={20}
-          value={config.title_yRatio || setup.title_yRatio} 
+          value={(config.title_yRatio || setup.title_yRatio)*100} 
         />
       </Space>
     </PopoverContent>
@@ -125,7 +125,7 @@ export const Title: React.FC<{
     <>
     <Popover content={configCard} placement="bottom-start">
       <TitleWrapper 
-        flexBasis={`${config.title_yRatio || setup.title_yRatio*100}%`} 
+        flexBasis={`${(config.title_yRatio || setup.title_yRatio)*100}%`} 
         width="100%"
         textAlign={config.title_position || defaults.title_position}
         className={isEditing && "EDIT_MODE"}
@@ -135,8 +135,9 @@ export const Title: React.FC<{
           pl="small" 
           pr="small" 
           fontSize={config.title_fontSize || defaults.title_fontSize}
+          color={config.chart_fontColor || setup.chart_fontColor}
         >
-          {config.title || content}
+          {config.title_title || content}
         </Text>
         <Paragraph 
           pl="small" 

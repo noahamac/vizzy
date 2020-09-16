@@ -62,13 +62,15 @@ export const YAxis: React.FC<{
     y_padding: 36,
     y_fontSize: "medium",
     y_label: "Hello world",
-    yAxis_xRatio: 10,
+    y_xRatio: 10,
+    y_xAdj: .94,
+    y_labelShift: .5,
   }
 
   const configCard = isEditing && (
     <PopoverContent p="small" width="300px" height="auto">
       <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Y Label Padding</Text>
+        <Text fontSize="xxsmall" variant="subdued">Label Padding</Text>
         <Slider 
           onChange={(e)=>{setConfig({...config, y_padding: parseInt(e.currentTarget.value)})}} 
           min={0} 
@@ -77,7 +79,7 @@ export const YAxis: React.FC<{
         />
       </Space>
       <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Y Label Font Size</Text>
+        <Text fontSize="xxsmall" variant="subdued">Label Font Size</Text>
         <Select 
           defaultValue={config.y_fontSize || defaults.y_fontSize} 
           options={[
@@ -93,19 +95,37 @@ export const YAxis: React.FC<{
         />
       </Space>
       <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Y Label Override</Text>
+        <Text fontSize="xxsmall" variant="subdued">Label Override</Text>
         <InlineInputText 
           value={config.y_label || setup.y_label} 
           onChange={(e)=>{setConfig({...config, y_label: e.currentTarget.value})}}
         />
       </Space>
       <Space mb="small">
-      <Text fontSize="xxsmall" variant="subdued">Y Axis Width</Text>
+      <Text fontSize="xxsmall" variant="subdued">Axis Width</Text>
       <Slider
-          onChange={(e)=>{setConfig({...config, yAxis_xRatio: parseInt(e.currentTarget.value)})}} 
-          min={0} 
+          onChange={(e)=>{setConfig({...config, y_xRatio: parseInt(e.currentTarget.value)/100})}} 
+          min={1} 
           max={20}
-          value={config.yAxis_xRatio || setup.yAxis_xRatio} 
+          value={(config.y_xRatio || setup.y_xRatio)*100} 
+        />
+      </Space>
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">Axis X-Adjustment</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, y_xAdj: parseInt(e.currentTarget.value)/100})}} 
+          min={50} 
+          max={100}
+          value={(config.y_xAdj || setup.y_xAdj)*100} 
+        />
+      </Space>
+      <Space mb="small">
+      <Text fontSize="xxsmall" variant="subdued">Label Y-Adjustment</Text>
+      <Slider
+          onChange={(e)=>{setConfig({...config, y_labelShift: parseInt(e.currentTarget.value)/100})}} 
+          min={0} 
+          max={100}
+          value={(config.y_labelShift || defaults.y_labelShift)*100} 
         />
       </Space>
     </PopoverContent>
@@ -113,23 +133,30 @@ export const YAxis: React.FC<{
 
   return (
     <Popover content={configCard} placement="right-start">
-    <AxisWrapper flexBasis={`${config.yAxis_xRatio || setup.yAxis_xRatio*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <AxisWrapper flexBasis={`${(config.y_xRatio || setup.y_xRatio)*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
         <svg
         style={{height: "100%"}}
         >
         <AxisLeft
           top={0}
-          left={plot.width*(config.YAXIS_X_RATIO || setup.YAXIS_X_RATIO*0.94)}
+          left={plot.width*(config.y_xRatio || setup.y_xRatio)*(config.y_xAdj || setup.y_xAdj)}
           scale={yScale}
-          stroke={"#282828"}
-          tickStroke={"#282828"}
+          stroke={config.chart_fontColor || setup.chart_fontColor}
+          tickStroke={config.chart_fontColor || setup.chart_fontColor}
           label={config.y_label || setup.y_label}
           labelOffset={config.y_padding || defaults.y_padding}
           labelClassName={"y_label"}
           labelProps={{
             fontSize: config.y_fontSize || defaults.y_fontSize,
-            x: 0-plot.height*(config.INNER_CHART_Y_RATIO*0.5 || setup.INNER_CHART_Y_RATIO*0.5),
+            x: 0-plot.height*(config.y_labelShift || setup.y_labelShift),
+            fill: config.chart_fontColor || setup.chart_fontColor
           }}
+          tickLabelProps={() => ({
+            fill: config.chart_fontColor || setup.chart_fontColor,
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            textAnchor: 'end',
+          })}
         />
       </svg>
     </AxisWrapper>

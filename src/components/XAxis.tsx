@@ -104,10 +104,10 @@ export const XAxis: React.FC<{
       <Space mb="small">
       <Text fontSize="xxsmall" variant="subdued">X Axis Height</Text>
       <Slider
-          onChange={(e)=>{setConfig({...config, xAxis_yRatio: parseInt(e.currentTarget.value)})}} 
+          onChange={(e)=>{setConfig({...config, xAxis_yRatio: parseInt(e.currentTarget.value)/100})}} 
           min={0} 
           max={20}
-          value={config.xAxis_yRatio || setup.xAxis_yRatio} 
+          value={(config.xAxis_yRatio || setup.xAxis_yRatio)*100} 
         />
       </Space>
     </PopoverContent>
@@ -116,7 +116,7 @@ export const XAxis: React.FC<{
   return (
     <Popover content={configCard} placement="top-start">
     <AxisWrapper 
-      flexBasis={`${config.xAxis_yRatio || setup.xAxis_yRatio*100}%`} 
+      flexBasis={`${(config.xAxis_yRatio || setup.xAxis_yRatio)*100}%`} 
       pt="xxsmall" 
       className={isEditing ? "EDIT_MODE" : ""}
     >
@@ -124,11 +124,17 @@ export const XAxis: React.FC<{
         style={{height: "50%"}}
         >
         <AxisBottom
-          left={0}
+          left={2}
           top={2}
           scale={xScale}
-          stroke={"#282828"}
-          tickStroke={"#282828"}
+          stroke={config.chart_fontColor || setup.chart_fontColor}
+          tickStroke={config.chart_fontColor || setup.chart_fontColor}
+          tickLabelProps={() => ({
+            fill: config.chart_fontColor || setup.chart_fontColor,
+            fontSize: 12,
+            fontFamily: 'sans-serif',
+            textAnchor: 'middle',
+          })}
         />
       </svg>
       <FlexItem 
@@ -137,6 +143,7 @@ export const XAxis: React.FC<{
       >
         <Text 
           fontSize={config.x_fontSize || defaults.x_fontSize}
+          color={config.chart_fontColor || setup.chart_fontColor}
         >
           {config.x_label || setup.x_label}
         </Text>

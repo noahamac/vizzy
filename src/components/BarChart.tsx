@@ -77,6 +77,12 @@ export const BarChart: React.FC<{
     return dimsArr
   }
 
+  function getInnerChartYRatio() {
+    let xaxis_y = (config.xAxis_yRatio || setup.xAxis_yRatio)
+    const chart_inner_y = 1 - xaxis_y
+    return chart_inner_y * 100
+  }
+
   const configCard = isEditing && (
     <PopoverContent p="small" width="300px" height="auto">
       <Space mb="small">
@@ -117,7 +123,7 @@ export const BarChart: React.FC<{
 
   return (
     <Popover content={configCard} placement="right-start" focusTrap={false}>
-    <ChartWrapper flexBasis={`${config.INNER_CHART_Y_RATIO || setup.INNER_CHART_Y_RATIO*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <ChartWrapper flexBasis={`${getInnerChartYRatio()}%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >

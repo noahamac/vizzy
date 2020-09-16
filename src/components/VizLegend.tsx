@@ -38,6 +38,7 @@ import {
   Space,
   Slider,
   theme,
+  ToggleSwitch,
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
@@ -59,11 +60,12 @@ import {
 
 export const VizLegend: React.FC<{
   isEditing: boolean,
+  data: any,
   setup: any,
   plot: any,
   config: any,
   setConfig: (newConfig: any) => void,
-}> = ({ isEditing, setup, plot, config, setConfig }) => {
+}> = ({ isEditing, data, setup, plot, config, setConfig }) => {
 
   const legendGlyphSize = "1vw";
   const ordinalColorScale = scaleOrdinal<string, string>({
@@ -80,39 +82,57 @@ export const VizLegend: React.FC<{
       <Space mb="small">
       <Text fontSize="xxsmall" variant="subdued">Legend Width</Text>
       <Slider
-          onChange={(e)=>{setConfig({...config, legend_xRatio: parseInt(e.currentTarget.value)})}} 
+          onChange={(e)=>{setConfig({...config, legend_xRatio: parseInt(e.currentTarget.value)/100})}} 
           min={0} 
           max={20}
-          value={config.legend_xRatio || setup.legend_xRatio} 
+          value={(config.legend_xRatio || setup.legend_xRatio)*100} 
         />
       </Space>
     </PopoverContent>
   )
 
+  let dimKeys = Object.keys(data[0] || {})
+
   return (
-    <Popover content={configCard} placement="top-start">
-    <AxisWrapper flexBasis={`${config.legend_xRatio || setup.legend_xRatio*100}%`} className={isEditing ? "EDIT_MODE" : ""}>
-      <LegendOrdinal scale={ordinalColorScale} labelFormat={label => `${label}`} labelAlign={"left"}>
+    <Popover content={configCard} placement="left-start">
+    <AxisWrapper flexBasis={`${(config.legend_xRatio || setup.legend_xRatio)*100}%`} pl="large" className={isEditing ? "EDIT_MODE" : ""}>
+      <LegendOrdinal 
+        scale={ordinalColorScale} 
+        labelFormat={label => `${label}`} 
+        >
         {labels => (
           <div style={{ display: 'flex', flexDirection: 'column'}}>
             {labels.map((label, i) => (
               <LegendItem
                 key={`legend-quantile-${i}`}
-                onClick={() => {
-                  console.log(label)
-                }}
               >
                 <svg height="10px">
                   <rect fill={label.value} width={"10px"} height={"10px"} />
                 </svg>
-                <LegendLabel>
-                  {label.text}
-                </LegendLabel>
+                <Text 
+                  fontSize="small"
+                  color={config.chart_fontColor || setup.chart_fontColor}
+                >
+                  {dimKeys[config.data_y || setup.data_y]}
+                </Text>
               </LegendItem>
             ))}
           </div>
         )}
       </LegendOrdinal>
+      <Space mt="small">
+        <Text variant="subdued" fontSize="small">Biden</Text>
+        <ToggleSwitch 
+          onChange={()=>{
+            setConfig({
+              ...config, 
+              data_y: config.data_y === "1" ? "2" : "1",
+              chart_fill: config.data_y === "1" ? "#ff5855" : "#5167ff",
+            })
+          }} 
+          on={config.data_y === "2" ? true : false}/>
+        <Text variant="subdued" fontSize="small">Trump</Text>
+      </Space>
     </AxisWrapper>
     </Popover>
   );

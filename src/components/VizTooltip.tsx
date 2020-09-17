@@ -201,8 +201,8 @@ export const VizTooltip: React.FC<{
           </TooltipTarget>
           { children }
         </div>
-
-)
+      )
+      
     } else {
       return (
         <div onMouseMove={(e) => setFromEvent(e)}>

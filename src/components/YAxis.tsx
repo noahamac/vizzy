@@ -42,11 +42,6 @@ import {
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
-import { covid_country_deaths } from "./covid_country_deaths";
-import {  } from "@looker/sdk";
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
-import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisLeft } from '@vx/axis';
 
 export const YAxis: React.FC<{

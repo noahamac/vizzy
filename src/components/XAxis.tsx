@@ -43,10 +43,6 @@ import {
 import styled, { ThemeProvider } from "styled-components";
 import "./styles.css";
 import { covid_country_deaths } from "./covid_country_deaths";
-import {  } from "@looker/sdk";
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
-import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisBottom, AxisLeft } from '@vx/axis';
 
 export const XAxis: React.FC<{
@@ -131,7 +127,7 @@ export const XAxis: React.FC<{
           tickStroke={config.chart_fontColor || setup.chart_fontColor}
           tickLabelProps={() => ({
             fill: config.chart_fontColor || setup.chart_fontColor,
-            fontSize: 12,
+            fontSize: 10,
             fontFamily: 'sans-serif',
             textAnchor: 'middle',
           })}

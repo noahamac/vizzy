@@ -92,7 +92,6 @@ export const VizTooltip: React.FC<{
   chart?: any,
 }> = ({config, isEditing, setup, data, chart, children}) => {
 
-
   if(isEditing || !(config?.tooltip?.tooltipOn || setup.tooltip.tooltipOn)){
     return(<>{ children }</>)
   }

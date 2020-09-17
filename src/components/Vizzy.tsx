@@ -26,7 +26,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Chip,
   Flex,
   FlexItem,
   ComponentsProvider,
@@ -37,16 +36,11 @@ import {
   theme,
 } from "@looker/components";
 import styled, { ThemeProvider } from "styled-components";
-import "./styles.css";
 import { useWindowSize, useKeyPress, getConfig } from "../utils/fetchers"
-import {  } from "./interfaces";
 import { covid_country_deaths } from "./covid_country_deaths";
 import { july_dist } from "./polls_july";
 import { polls_flat } from "./polls_flat";
 import { weekly_avg } from "./weekly_avg";
-import {  } from "@looker/sdk";
-import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { BarChart } from "./BarChart";
 import { VizManager } from "./VizManager";
@@ -56,93 +50,6 @@ import { YAxis } from "./YAxis";
 import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
 import { VizTooltip } from './VizTooltip';
-
-function getBarChart(defaults: any, config: any, plot: any) {
-  const data_limit = config.rows || defaults.rows
-  let data = covid_country_deaths.filter((d,i)=>{return i<data_limit})
-
-  console.log(Object.keys(data[0] || {}))
-
-  const x = (d: any) => d["Country"];
-  const y = (d: any) => d["Deaths (Running Total)"];
-
-  const xScale = scaleBand({
-    range: [0, plot.width*(config.CHART_X_RATIO || defaults.CHART_X_RATIO)],
-    domain: data.map(x),
-  });
-
-  const yScale = scaleLinear({
-    range: [plot.height*(config.CHART_Y_RATIO || defaults.CHART_Y_RATIO), 0],
-    domain: [0, Math.max(...data.map(y))],
-  });
-
-  const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
-  const xPoint = compose(xScale, x);
-  const yPoint = compose(yScale, y);
-
-  return { data, x, y, xScale, yScale, xPoint, yPoint }
-}
-
-function getBoxplot(plot:any, CHART_X_RATIO: number, CHART_Y_RATIO: number) {
-  let data = july_dist
-
-  const x = (d: any) => d.boxPlot.x;
-  const min = (d: any) => d.boxPlot.min;
-  const max = (d: any) => d.boxPlot.max;
-  const median = (d: any) => d.boxPlot.median;
-  const firstQuartile = (d: any) => d.boxPlot.firstQuartile;
-  const thirdQuartile = (d: any) => d.boxPlot.thirdQuartile;
-  const outliers = (d: any) => d.boxPlot.outliers;
-
-  const xMax = plot.width;
-  const yMax = plot.height;
-
-  const xScale = scaleBand<string>({
-    rangeRound: [0, plot.width*CHART_X_RATIO],
-    domain: data.map(x),
-  });
-
-  const values = data.reduce((allValues, { boxPlot }) => {
-    allValues.push(boxPlot.min, boxPlot.max);
-    return allValues;
-  }, [] as number[]);
-  const minYValue = Math.min(...values);
-  const maxYValue = Math.max(...values);
-
-  const yScale = scaleLinear<number>({
-    rangeRound: [plot.height*CHART_Y_RATIO, 0],
-    domain: [minYValue-5, maxYValue],
-  });
-
-  const boxWidth = xScale.bandwidth();
-
-  return { xScale, yScale, data, boxWidth, x }
-}
-
-function getScatter(config: any) {
-  let data = covid_country_deaths.filter((d,i)=>{return i<10})
-
-  const x = (d: any) => d["Country"];
-  const y = (d: any) => d["Deaths (Running Total)"];
-
-  const xScale = scaleBand({
-    range: [0, config.width*config.CHART_X_RATIO],
-    domain: data.map(x),
-  });
-
-  const xTickFormat = (v: number) => v
-
-  const yScale = scaleLinear({
-    range: [config.height*config.CHART_Y_RATIO, 0],
-    domain: [0, Math.max(...data.map(y))],
-  });
-
-  const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
-  const xPoint = compose(xScale, x);
-  const yPoint = compose(yScale, y);
-
-  return { data, x, y, xScale, yScale, compose, xPoint, yPoint, xTickFormat }
-}
 
 export const Vizzy: React.FC<{}> = () => {
   const isEditing = useKeyPress("Escape");
@@ -229,8 +136,7 @@ export const Vizzy: React.FC<{}> = () => {
 
   const yScale = scaleLinear({
     range: [plot.height*(getInnerChartYRatio()/100), 0],
-    domain: [0, 55],
-    // domain: [0, Math.max(...data.map(y))],
+    domain: [0, Math.max(...data.map(y))],
   });
 
   const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
@@ -290,15 +196,6 @@ export const Vizzy: React.FC<{}> = () => {
             config={config}
             setConfig={addConfig}
           />
-          {/* <Boxplot
-            data={data}
-            xScale={xScale}
-            yScale={yScale}
-            boxWidth={boxWidth}
-            plot={plot}
-            pHeight={INNER_CHART_Y_RATIO}
-            isEditing={isEditing}
-          /> */}
           <XAxis
             xScale={xScale}
             isEditing={isEditing}

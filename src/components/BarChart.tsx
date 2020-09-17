@@ -62,9 +62,6 @@ export const BarChart: React.FC<{
   setConfig: (newConfig: any) => void,
 }> = ({ data, xPoint, yPoint, xScale, isEditing, setup, plot, config, setConfig }) => {
 
-  let colors = ["#4285F4", "#DB4437", "#F4B400", "#0F9D58", "#4285F4"]
-  let randIndex = Math.round(Math.random()*colors.length)
-
   const defaults = {
     chart_fill: "#4285F4",
   }

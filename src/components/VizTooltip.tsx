@@ -101,8 +101,6 @@ export const VizTooltip: React.FC<{
         return(<>{ children }</>)
     }
 
-    console.log(config)
-
     const [position, setPosition] = useState({x: Math.random(), y: Math.random()})
     const [showTooltip, setShowTooltip] = useState({show: false, datum: {}, id:null})
     const height = config.tooltip.type === "text" ? 55 : 300;
@@ -114,8 +112,9 @@ export const VizTooltip: React.FC<{
         background-color: rgb(38, 45, 51);
         box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 18px, rgba(0, 0, 0, 0.04) 0px 1px 4px;
         width: ${width}px;
-        height: auto;
+        height: ${height}px;
         justify-content: center;
+        z-index: 10000;
         border-radius: 6px;
         ::after {
             content: "";
@@ -135,7 +134,7 @@ export const VizTooltip: React.FC<{
         display: block;
         white-space: pre-line;
         padding: 5px;
-        z-index: -10000
+        z-index: 10000;
         float: left;
         margin-bottom: -150px
     `

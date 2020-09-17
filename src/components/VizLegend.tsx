@@ -48,12 +48,7 @@ import { Group } from '@vx/group';
 import { Bar } from '@vx/shape';
 import { scaleOrdinal } from '@vx/scale';
 import {
-  Legend,
-  LegendLinear,
-  LegendQuantile,
   LegendOrdinal,
-  LegendSize,
-  LegendThreshold,
   LegendItem,
   LegendLabel,
 } from '@vx/legend';

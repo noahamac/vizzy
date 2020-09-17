@@ -24,32 +24,14 @@
 
  */
 
-import React, { useState, useEffect } from "react";
-import {
-  Chip,
-  Flex,
-  FlexItem,
-  Heading,
-  Button,
-  Spinner,
-  Text,
-  theme,
-  getWindowedListBoundaries,
-} from "@looker/components";
-import styled, { ThemeProvider } from "styled-components";
-import "./styles.css";
-import { covid_country_deaths } from "./covid_country_deaths";
-import {  } from "@looker/sdk";
+import React from "react";
+import styled from "styled-components";
+import { FlexItem } from "@looker/components";
 import { Group } from '@vx/group';
-import { Bar } from '@vx/shape';
 import { scaleLinear, scaleBand } from '@vx/scale';
 import { AxisRight } from '@vx/axis';
 import { BoxPlot } from '@vx/stats';
-import { LinearGradient } from '@vx/gradient';
-import { withTooltip, Tooltip, defaultStyles as defaultTooltipStyles } from '@vx/tooltip';
-import { WithTooltipProvidedProps } from '@vx/tooltip/lib/enhancers/withTooltip';
-import { PatternLines } from '@vx/pattern';
-import { width } from "styled-system";
+import "./styles.css";
 
 export const TooltipBoxplot: React.FC<{
   data: any[],
@@ -59,7 +41,8 @@ export const TooltipBoxplot: React.FC<{
   id: number
 }> = ({ data, height, width, id, rep}) => {
 
- data = [data[id]]
+  //Get data for column on hover 
+  data = [data[id]]
 
   const x = (d: any) => d['Start Week'];
   const min = (d: any) => parseFloat(d['Min Pct']['Campaign'][rep].substring(0, d['Min Pct']['Campaign'][rep].length-1));
@@ -79,83 +62,53 @@ export const TooltipBoxplot: React.FC<{
     domain: [30-5, 70],
   });
 
-  function getSeries(datas: any[]) {
-    let datum = datas.sort((x: any, y: any) => { return x.value - y.value })
-    let startIndex = 20
-    let endIndex = 65
-    let rollup = []
-    while (startIndex <= endIndex) {
-      let enc = datum.filter(d => { return Math.round(d.value) === startIndex }).reduce((a, b) => +a + +b.count, 0);
-      enc > 0 && rollup.push({value:startIndex,count:enc})
-      startIndex++;
-    }
-    return rollup
-  }
 
   return (
     <ChartWrapper flexBasis={`${height*100}%`}>
-      <svg
-        style={{height: "100%"}}
-        >
-            <AxisRight
-                top={15}
-                left={width-30}
-                scale={yScale}
-                labelClassName={"y_label"}
-                stroke={"#fff"}
-                tickStroke={"fff"}
-                tickLabelProps={() => { return {
-                    fontSize: 12,
-                    fill: "#fff",
-                    textAnchor: 'inherit',
-                }}}
-            />
-
-
+      <svg style={{height: "100%"}} >
         
-          <Group >
-            {data.map((d: any, i) => (
-              <g key={i}>
-                <BoxPlot
-                  min={min(d)}
-                  max={max(d)}
-                  left={xScale(x(d))! + (0.425 * xScale.bandwidth())}
-                  firstQuartile={firstQuartile(d)}
-                  thirdQuartile={thirdQuartile(d)}
-                  median={median(d)}
-                  boxWidth={xScale.bandwidth()*0.15}
-                  fill="#FFFFFF"
-                  fillOpacity={0.0}
-                  stroke={rep === "Biden" ? "#4285F4" : "#DB4437"}
-                  strokeWidth={2}
-                  valueScale={yScale}
-                  outliers={outliers(d)}
-                />
-              </g>
-            ))}
-          </Group>
-        </svg>
-        {/* : "#DB4437" */}
-        {/* {tooltipOpen && tooltipData && (
-          <Tooltip
-            top={tooltipTop}
-            left={tooltipLeft}
-            style={{ ...defaultTooltipStyles, backgroundColor: '#283238', color: 'white' }}
-          >
-            <div>
-              <strong>{tooltipData.name}</strong>
-            </div>
-            <div style={{ marginTop: '5px', fontSize: '12px' }}>
-              {tooltipData.max && <div>max: {tooltipData.max}</div>}
-              {tooltipData.thirdQuartile && <div>third quartile: {tooltipData.thirdQuartile}</div>}
-              {tooltipData.median && <div>median: {tooltipData.median}</div>}
-              {tooltipData.firstQuartile && <div>first quartile: {tooltipData.firstQuartile}</div>}
-              {tooltipData.min && <div>min: {tooltipData.min}</div>}
-            </div>
-          </Tooltip>
-        )} */}
+        <AxisRight
+          top={15}
+          left={width-30}
+          scale={yScale}
+          labelClassName={"y_label"}
+          stroke={"#fff"}
+          tickStroke={"fff"}
+          tickLabelProps={() => { 
+            return {
+              fontSize: 12,
+              fill: "#fff",
+              textAnchor: 'inherit',
+            }
+          }}
+        />
+
+        <Group >
+        {data.map((d: any, i) => (
+          <g key={i}>
+            <BoxPlot
+              min={min(d)}
+              max={max(d)}
+              left={xScale(x(d))! + (0.425 * xScale.bandwidth())}
+              firstQuartile={firstQuartile(d)}
+              thirdQuartile={thirdQuartile(d)}
+              median={median(d)}
+              boxWidth={xScale.bandwidth()*0.15}
+              fill="#FFFFFF"
+              fillOpacity={0.0}
+              stroke={rep === "Biden" ? "#4285F4" : "#DB4437"}
+              strokeWidth={2}
+              valueScale={yScale}
+              outliers={outliers(d)}
+            />
+          </g>
+        ))}
+
+        </Group>
+      </svg>
     </ChartWrapper>
   );
+  
 }
 
 // @ts-ignore

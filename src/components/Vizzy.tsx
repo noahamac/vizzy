@@ -50,6 +50,8 @@ import { YAxis } from "./YAxis";
 import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
 import { VizTooltip } from './VizTooltip';
+import { ECMap } from "./ECMap";
+import { state_dists } from "./state_dists";
 
 export const Vizzy: React.FC<{}> = () => {
   const isEditing = useKeyPress("Escape");
@@ -57,11 +59,11 @@ export const Vizzy: React.FC<{}> = () => {
 
   const plot = useWindowSize();
   const legend_xRatio = 0.10
-  const yAxis_xRatio = 0.10
+  const yAxis_xRatio = 0.0
   const CHART_X_RATIO = 1 - legend_xRatio - yAxis_xRatio
 
   const title_yRatio = 0.1
-  const xAxis_yRatio = 0.12
+  const xAxis_yRatio = 0.0
   const CHART_Y_RATIO = 1 - title_yRatio
   const INNER_CHART_Y_RATIO = 1 - xAxis_yRatio - title_yRatio
 
@@ -80,7 +82,8 @@ export const Vizzy: React.FC<{}> = () => {
     y_label: "",
     chart_background: "#FFFFF",
     chart_fontColor: "#282828",
-    tooltip: {tooltipOn: false}
+    tooltip: {tooltipOn: false},
+    chart_x_ratio: null,
 
   }
 
@@ -96,10 +99,78 @@ export const Vizzy: React.FC<{}> = () => {
   }
 
   const data_limit = config.data_rows || defaults.data_rows
-  let data = weekly_avg.filter((d,i)=>{
-    return i<data_limit
-  })
+  // let data = state_dists.filter((d,i)=>{
+  //   return i<data_limit
+  // })
+  let data = state_dists
+
   let dimKeys = Object.keys(data[0] || {})
+
+  let call = data.map((d,i) => {
+    if (d["Margins Fq Margin"] > 0 && d["Margins Tq Margin"] > 0) {
+      return {
+        state: d["Polls State"],
+        call: "Solid Biden",
+        abbr: d["Electoral College Map Abbreviation"],
+        votes: d["Electoral College Map Votes"],
+        min: d["Margins Min Margin"],
+        first_q: d["Margins Fq Margin"],
+        median: d["Margins Median Margin"],
+        third_q: d["Margins Tq Margin"],
+        max: d["Margins Max Margin"],
+      }
+    } else if (d["Margins Fq Margin"] < 0 && d["Margins Median Margin"] > 0) {
+      return {
+        state: d["Polls State"],
+        call: "Lean Biden",
+        abbr: d["Electoral College Map Abbreviation"],
+        votes: d["Electoral College Map Votes"],
+        min: d["Margins Min Margin"],
+        first_q: d["Margins Fq Margin"],
+        median: d["Margins Median Margin"],
+        third_q: d["Margins Tq Margin"],
+        max: d["Margins Max Margin"],
+      }
+    } else if (d["Margins Tq Margin"] > 0 && d["Margins Median Margin"] < 0) {
+      return {
+        state: d["Polls State"],
+        call: "Lean Trump",
+        abbr: d["Electoral College Map Abbreviation"],
+        votes: d["Electoral College Map Votes"],
+        min: d["Margins Min Margin"],
+        first_q: d["Margins Fq Margin"],
+        median: d["Margins Median Margin"],
+        third_q: d["Margins Tq Margin"],
+        max: d["Margins Max Margin"],
+      }
+    } else if (d["Margins Fq Margin"] < 0 && d["Margins Tq Margin"] < 0) {
+      return {
+        state: d["Polls State"],
+        call: "Solid Trump",
+        abbr: d["Electoral College Map Abbreviation"],
+        votes: d["Electoral College Map Votes"],
+        min: d["Margins Min Margin"],
+        first_q: d["Margins Fq Margin"],
+        median: d["Margins Median Margin"],
+        third_q: d["Margins Tq Margin"],
+        max: d["Margins Max Margin"],
+      }
+    } else {
+      return {
+        state: d["Polls State"],
+        call: "True Tossup",
+        abbr: d["Electoral College Map Abbreviation"],
+        votes: d["Electoral College Map Votes"],
+        min: d["Margins Min Margin"],
+        first_q: d["Margins Fq Margin"],
+        median: d["Margins Median Margin"],
+        third_q: d["Margins Tq Margin"],
+        max: d["Margins Max Margin"],
+      }
+    }
+  })
+
+  console.log(call)
 
   data = data.sort(compare)
 
@@ -111,8 +182,7 @@ export const Vizzy: React.FC<{}> = () => {
 
   function getChartXRatio() {
     let legend_x = (config.legend_xRatio || defaults.legend_xRatio)
-    let yAxis_x = (config.y_xRatio || defaults.y_xRatio)
-    const chart_x = 1 - legend_x - yAxis_x
+    const chart_x = 1 - legend_x
     return chart_x * 100
   }
 
@@ -130,7 +200,7 @@ export const Vizzy: React.FC<{}> = () => {
   }
 
   const xScale = scaleBand({
-    range: [0, plot.width*(getChartXRatio()/100)*0.9],
+    range: [0, plot.width*(getChartXRatio()/100)*0.85],
     domain: data.map(x),
   });
 
@@ -164,7 +234,6 @@ export const Vizzy: React.FC<{}> = () => {
       flexDirection="column" 
       height="100%" 
       p="xxxlarge" 
-      mr={isEditing && "10%"}
       backgroundColor={config.chart_background || defaults.chart_background}
     >
       <Title
@@ -176,27 +245,11 @@ export const Vizzy: React.FC<{}> = () => {
         setConfig={addConfig}
       />
       <Flex flexBasis={`${getChartYRatio()}%`}>
-        <YAxis
-            yScale={yScale}
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
-        />
         <Flex flexDirection="column" flexBasis={`${getChartXRatio()}%`}>
-          <BarChart
-            data={data}
+          <ECMap
+            data={call}
             xPoint={xPoint}
             yPoint={yPoint}
-            xScale={xScale}
-            isEditing={isEditing}
-            setup={defaults}
-            plot={plot}
-            config={config}
-            setConfig={addConfig}
-          />
-          <XAxis
             xScale={xScale}
             isEditing={isEditing}
             setup={defaults}

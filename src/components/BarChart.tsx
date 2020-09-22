@@ -120,7 +120,7 @@ export const BarChart: React.FC<{
 
   return (
     <Popover content={configCard} placement="right-start" focusTrap={false}>
-    <ChartWrapper flexBasis={`${getInnerChartYRatio()}%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <ChartWrapper flexBasis={`100%`} className={isEditing ? "EDIT_MODE" : ""}>
       <svg
         style={{height: "100%"}}
         >

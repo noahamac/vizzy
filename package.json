@@ -51,6 +51,7 @@
     "react-router-dom": "^5.1.2",
     "react-sticky-el": "^1.1.0",
     "react-syntax-highlighter": "^11.0.2",
+    "react-usa-map": "^1.5.0",
     "recharts": "^1.7.1",
     "styled-components": "^4.4.1",
     "ts-jest": "^25.3.0",

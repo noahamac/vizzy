@@ -143,7 +143,6 @@ export const VizTooltip: React.FC<{
         setPosition({ x: e.clientX, y: e.clientY }); 
         setShowTooltip({ show: false, datum: {}, id: null });
         if(e.target.id){
-            console.log(e.target.id)
             setShowTooltip({ show: true, datum: data[e.target.id], id: e.target.id })
         }
     }

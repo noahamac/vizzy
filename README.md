@@ -12,10 +12,15 @@ Problem: Using the extension framework, can we develop a visualization layer bas
   In manifest for a LookML project on your Looker instance:
 
   ```
-  application: vizzy-dev {
-    label: "Vizzy (dev)"
-    uri: "https://localhost:8080/bundle.js"
+  application: vizzy {
+  label: "Vizzy"
+  url: "http://127.0.0.1:8080/bundle.js"
+  entitlements: {
+    local_storage: yes
+    navigation: yes
+    new_window: yes
   }
+}
   ```
   
   And you will also need to add a dummy model to the project.

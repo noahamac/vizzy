@@ -34,6 +34,8 @@ import {
   Spinner,
   Popover,
   PopoverContent,
+  ButtonItem,
+  Select,
   Text,
   Space,
   Slider,
@@ -92,17 +94,20 @@ export const VizLegend: React.FC<{
     <Popover content={configCard} placement="left-start">
     <AxisWrapper flexBasis={`${(config.legend_xRatio || setup.legend_xRatio)*100}%`} pl="large" className={isEditing ? "EDIT_MODE" : ""}>
       <Space mt="small">
-        <Text variant="subdued" fontSize="small">Biden</Text>
-        <ToggleSwitch 
-          onChange={()=>{
+        <Select 
+          value={config.legend_model || setup.legend_model} 
+          options={[
+            {label:"Niskanen", value:"Niskanen",description:"September 15, 2020"},
+            {label:"Marginal Outcome", value:"Marginal Outcome",description:"September 25, 2020"},
+            {label:"Combined", value:"Combined",description:"September 25, 2020"}
+          ]}
+          onChange={(e)=>{
             setConfig({
               ...config, 
-              data_y: config.data_y === "1" ? "2" : "1",
-              chart_fill: config.data_y === "1" ? "#ff5855" : "#5167ff",
+              legend_model: e,
             })
-          }} 
-          on={config.data_y === "2" ? true : false}/>
-        <Text variant="subdued" fontSize="small">Trump</Text>
+          }}
+        />
       </Space>
     </AxisWrapper>
     </Popover>
@@ -111,4 +116,5 @@ export const VizLegend: React.FC<{
 
 // @ts-ignore
 const AxisWrapper = styled(FlexItem)`
+  font-family:"Comic Sans MS";
 `;

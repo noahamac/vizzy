@@ -242,7 +242,7 @@ export const VizManager: React.FC<{
   }
 
   return isEditing && (
-    <Popover content={configCard} placement="left-end" pin={true} arrow={true} focusTrap={false}>
+    <Popover content={configCard} placement="left-end" pin={true} focusTrap={false}>
     <ManagerWrapper>
       {getSvg(config.viz_manager || defaults.viz_manager)}
     </ManagerWrapper>

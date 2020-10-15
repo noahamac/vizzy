@@ -51,6 +51,8 @@ import { Title } from "./Title";
 import { VizLegend } from "./VizLegend";
 import { VizTooltip } from './VizTooltip';
 import { ECMap } from "./ECMap";
+import { ECBar } from "./ECBar";
+import { forecast, toplevel } from "./ecv_forecast";
 import { state_dists } from "./state_dists";
 
 export const Vizzy: React.FC<{}> = () => {
@@ -58,9 +60,9 @@ export const Vizzy: React.FC<{}> = () => {
   const { config, addConfig } = getConfig()
 
   const plot = useWindowSize();
-  const legend_xRatio = 0.10
+  const legend_xRatio = 0.20
   const yAxis_xRatio = 0.0
-  const CHART_X_RATIO = 1 - legend_xRatio - yAxis_xRatio
+  const CHART_X_RATIO = 1
 
   const title_yRatio = 0.1
   const xAxis_yRatio = 0.0
@@ -70,7 +72,7 @@ export const Vizzy: React.FC<{}> = () => {
   const defaults = {
     legend_xRatio: legend_xRatio,
     y_xRatio: yAxis_xRatio,
-    CHART_X_RATIO: CHART_X_RATIO,
+    CHART_X_RATIO: 1,
     title_yRatio: title_yRatio,
     xAxis_yRatio: xAxis_yRatio,
     INNER_CHART_Y_RATIO: INNER_CHART_Y_RATIO,
@@ -84,106 +86,39 @@ export const Vizzy: React.FC<{}> = () => {
     chart_fontColor: "#282828",
     tooltip: {tooltipOn: false},
     chart_x_ratio: null,
+    legend_model: "Combined",
 
   }
 
-  function compare( a, b ) {
-    let yKey = dimKeys[config.data_x || defaults.data_x]
-    if ( a[yKey] < b[yKey] ){
-      return -1;
-    }
-    if ( a[yKey] > b[yKey] ){
-      return 1;
-    }
-    return 0;
-  }
+  // function compare( a, b ) {
+  //   let yKey = dimKeys[config.data_x || defaults.data_x]
+  //   if ( a[yKey] < b[yKey] ){
+  //     return -1;
+  //   }
+  //   if ( a[yKey] > b[yKey] ){
+  //     return 1;
+  //   }
+  //   return 0;
+  // }
 
   const data_limit = config.data_rows || defaults.data_rows
   // let data = state_dists.filter((d,i)=>{
   //   return i<data_limit
   // })
-  let data = state_dists
+  let data = forecast
+  let ec_toplevel = toplevel
 
-  let dimKeys = Object.keys(data[0] || {})
+  // const x = (d: any) => d[dimKeys[config.data_x || defaults.data_x]];
+  // const y = (d: any) => d[dimKeys[config.data_y || defaults.data_y]];
 
-  let call = data.map((d,i) => {
-    if (d["Margins Fq Margin"] > 0 && d["Margins Tq Margin"] > 0) {
-      return {
-        state: d["Polls State"],
-        call: "Solid Biden",
-        abbr: d["Electoral College Map Abbreviation"],
-        votes: d["Electoral College Map Votes"],
-        min: d["Margins Min Margin"],
-        first_q: d["Margins Fq Margin"],
-        median: d["Margins Median Margin"],
-        third_q: d["Margins Tq Margin"],
-        max: d["Margins Max Margin"],
-      }
-    } else if (d["Margins Fq Margin"] < 0 && d["Margins Median Margin"] > 0) {
-      return {
-        state: d["Polls State"],
-        call: "Lean Biden",
-        abbr: d["Electoral College Map Abbreviation"],
-        votes: d["Electoral College Map Votes"],
-        min: d["Margins Min Margin"],
-        first_q: d["Margins Fq Margin"],
-        median: d["Margins Median Margin"],
-        third_q: d["Margins Tq Margin"],
-        max: d["Margins Max Margin"],
-      }
-    } else if (d["Margins Tq Margin"] > 0 && d["Margins Median Margin"] < 0) {
-      return {
-        state: d["Polls State"],
-        call: "Lean Trump",
-        abbr: d["Electoral College Map Abbreviation"],
-        votes: d["Electoral College Map Votes"],
-        min: d["Margins Min Margin"],
-        first_q: d["Margins Fq Margin"],
-        median: d["Margins Median Margin"],
-        third_q: d["Margins Tq Margin"],
-        max: d["Margins Max Margin"],
-      }
-    } else if (d["Margins Fq Margin"] < 0 && d["Margins Tq Margin"] < 0) {
-      return {
-        state: d["Polls State"],
-        call: "Solid Trump",
-        abbr: d["Electoral College Map Abbreviation"],
-        votes: d["Electoral College Map Votes"],
-        min: d["Margins Min Margin"],
-        first_q: d["Margins Fq Margin"],
-        median: d["Margins Median Margin"],
-        third_q: d["Margins Tq Margin"],
-        max: d["Margins Max Margin"],
-      }
-    } else {
-      return {
-        state: d["Polls State"],
-        call: "True Tossup",
-        abbr: d["Electoral College Map Abbreviation"],
-        votes: d["Electoral College Map Votes"],
-        min: d["Margins Min Margin"],
-        first_q: d["Margins Fq Margin"],
-        median: d["Margins Median Margin"],
-        third_q: d["Margins Tq Margin"],
-        max: d["Margins Max Margin"],
-      }
-    }
-  })
-
-  console.log(call)
-
-  data = data.sort(compare)
-
-  const x = (d: any) => d[dimKeys[config.data_x || defaults.data_x]];
-  const y = (d: any) => d[dimKeys[config.data_y || defaults.data_y]];
-
-  defaults.x_label = dimKeys[config.data_x || defaults.data_x]
-  defaults.y_label = dimKeys[config.data_y || defaults.data_y]
+  // defaults.x_label = dimKeys[config.data_x || defaults.data_x]
+  // defaults.y_label = dimKeys[config.data_y || defaults.data_y]
 
   function getChartXRatio() {
     let legend_x = (config.legend_xRatio || defaults.legend_xRatio)
     const chart_x = 1 - legend_x
-    return chart_x * 100
+    // return chart_x * 100
+    return 100
   }
 
   function getChartYRatio() {
@@ -199,58 +134,63 @@ export const Vizzy: React.FC<{}> = () => {
     return chart_inner_y * 100
   }
 
-  const xScale = scaleBand({
-    range: [0, plot.width*(getChartXRatio()/100)*0.85],
-    domain: data.map(x),
-  });
+  // const xScale = scaleBand({
+  //   range: [0, plot.width*(getChartXRatio()/100)*0.85],
+  //   domain: data.map(x),
+  // });
 
-  const yScale = scaleLinear({
-    range: [plot.height*(getInnerChartYRatio()/100), 0],
-    domain: [0, Math.max(...data.map(y))],
-  });
+  // const yScale = scaleLinear({
+  //   range: [plot.height*(getInnerChartYRatio()/100), 0],
+  //   domain: [0, Math.max(...data.map(y))],
+  // });
 
-  const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
-  const xPoint = compose(xScale, x);
-  const yPoint = compose(yScale, y);
+  // const compose = (scale: any, accessor: any) => (data: any) => scale(accessor(data));
+  // const xPoint = compose(xScale, x);
+  // const yPoint = compose(yScale, y);
 
   return (
     <ComponentsProvider>
     {config && 
     <>
-    <VizManager
+    {/* <VizManager
       isEditing={isEditing}
       setup={defaults}
       plot={plot}
       config={config}
       setConfig={addConfig}
-    />
-    <VizTooltip
+    /> */}
+    {/* <VizTooltip
       config={config}
       isEditing={isEditing}
       setup={defaults}
       data={data}
-    >
+    > */}
     <Tile 
       flexDirection="column" 
-      height="100%" 
+      height="auto" 
       p="xxxlarge" 
       backgroundColor={config.chart_background || defaults.chart_background}
     >
-      <Title
+      {/* <Title
         content="Polling Distributions"
         isEditing={isEditing}
         setup={defaults}
         plot={plot}
         config={config}
         setConfig={addConfig}
-      />
-      <Flex flexBasis={`${getChartYRatio()}%`}>
-        <Flex flexDirection="column" flexBasis={`${getChartXRatio()}%`}>
+      /> */}
+      <Flex flexBasis={`auto`}>
+        <Flex flexDirection="column" flexBasis={`${getChartXRatio()}%`} mb="medium">
+          <ECBar
+            top={ec_toplevel}
+            isEditing={isEditing}
+            setup={defaults}
+            plot={plot}
+            config={config}
+            setConfig={addConfig}
+          />
           <ECMap
-            data={call}
-            xPoint={xPoint}
-            yPoint={yPoint}
-            xScale={xScale}
+            data={data}
             isEditing={isEditing}
             setup={defaults}
             plot={plot}
@@ -258,17 +198,29 @@ export const Vizzy: React.FC<{}> = () => {
             setConfig={addConfig}
           />
         </Flex>
-        <VizLegend 
+        {/* <VizLegend 
           isEditing={isEditing}
           data={data}
           setup={defaults}
           plot={plot}
           config={config}
           setConfig={addConfig}
-        />
+        /> */}
       </Flex>
     </Tile>
-    </VizTooltip>
+    <Flex style={{maxWidth:800, margin: "0 auto"}} p="medium" flexDirection={"column"}>
+      <FlexItem><Text fontSize="small" variant="subdued">Sources: <a target="_blank" href={"https://data.fivethirtyeight.com/"}>FiveThirtyEight</a>, <a target="_blank" href={"https://web.archive.org/web/20200916023711/https://www.niskanencenter.org/bitecofer-epstein-september-update/"}>Dr. Rachel Bitecofer and Sam Epstein</a></Text></FlexItem>
+      <FlexItem><Heading>How to read:</Heading></FlexItem>
+      <FlexItem mb="xsmall"><Text>{`This model predicts that Joe Biden (D) wins the presidency with ${ec_toplevel[0].solid_biden + ec_toplevel[0].lean_biden} Electoral votes. Joe Biden will win as few as ${ec_toplevel[0].solid_biden} and as many as ${ec_toplevel[0].solid_biden+ec_toplevel[0].lean_biden+ec_toplevel[0].lean_trump+ec_toplevel[0].tossup} Electoral votes.`}</Text></FlexItem>
+      <FlexItem mb="xsmall"><Text>{`Joe Biden definitely wins ${data.filter((d)=>{return d["Forecast Lookup Forecast"] === "Solid Biden"}).map((d)=>{return " " + d["Ecmap Abbreviation"]})}.`}</Text></FlexItem>
+      <FlexItem mb="xsmall"><Text>{`Joe Biden probably wins ${data.filter((d)=>{return d["Forecast Lookup Forecast"] === "Lean Biden"}).map((d)=>{return " " + d["Ecmap Abbreviation"]})}. `}</Text></FlexItem>
+      <FlexItem mb="xsmall"><Text>{`Donald Trump (R) definitely wins ${data.filter((d)=>{return d["Forecast Lookup Forecast"] === "Solid Trump"}).map((d)=>{return " " + d["Ecmap Abbreviation"]})}. `}</Text></FlexItem>
+      <FlexItem mb="xsmall"><Text>{`Donald Trump probably wins ${data.filter((d)=>{return d["Forecast Lookup Forecast"] === "Lean Trump"}).map((d)=>{return " " + d["Ecmap Abbreviation"]})}. `}</Text></FlexItem>
+      {/* <FlexItem mb="xsmall"><Text>{`This model works by taking Dr. Rachel Bitecofer's research and model to the extreme: America is so polarized, and public opinion so stable over the long run, that we can use the marginal outcome of every general election poll collected by 538 as a probability distribution of electoral outcomes in November. This model states emphatically that nothing has changed the race, because nothing can change American's minds about the race. States are organized into calls of Solid Biden, Lean Biden, Tossup, Lean Trump, or Solid Trump based on the distribution of marginal outcomes. While the model argues there is no time-series dimension to the 2020 outcome, it remains as a manipulated variable for your consideration.`}</Text></FlexItem> */}
+      {/* <FlexItem><Heading>Methodology:</Heading></FlexItem>
+      <FlexItem><Text>{`This model extends Dr. Rachel Bitecofer's negative partisanship / realignment theory and model to include general election polling between Donald Trump (R) and Joe Biden (D). Without going into the specifics of her theory, as her work stands for itself and should be considered separate, as a result of extreme negative polarization, public opinion in the US does not change and reflects generational and demographic shifts and specifically how they perceive their opposition. Her theory could be reduced to say: nobody has changed their mind about their 2020 vote preference, and nobody will. An election every day for the past 4 years would produce the same outcome as will occur on November 3, 2020. This polling model methodology takes this assertion to the extreme: every general election poll conducted during the Trump presidency is converted into the net Biden margin of victory (biden_pct - trump_pct).`}</Text></FlexItem> */}
+    </Flex>
+    {/* </VizTooltip> */}
     </>}
     </ComponentsProvider>
   );
@@ -276,7 +228,9 @@ export const Vizzy: React.FC<{}> = () => {
 
 // @ts-ignore
 const Tile = styled(Flex)`
-  padding: 5px;
+  padding: 10px;
+  max-width: 800px;
+  margin: 0 auto;
   .EDIT_MODE {
     border-radius: 5px;
     box-shadow: 0px 0px 0px 1px ${theme.colors.key} inset;

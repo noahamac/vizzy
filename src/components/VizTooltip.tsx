@@ -203,8 +203,8 @@ export const VizTooltip: React.FC<{
                             data={boxData}
                             height={height}
                             width={width}
-                            id={showTooltip.id}
-                            rep={config.data_y === "1" ? "Biden" : "Trump"}
+                            // id={showTooltip.id}
+                            // rep={config.data_y === "1" ? "Biden" : "Trump"}
                             // id={showTooltip.id}
                             // fieldX={"Biden Average"}
                             // fieldY={"Trump Average"}

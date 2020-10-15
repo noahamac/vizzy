@@ -155,4 +155,5 @@ export const Title: React.FC<{
 
 // @ts-ignore
 const TitleWrapper = styled(FlexItem)`
+  font-family:"Comic Sans MS";
 `;

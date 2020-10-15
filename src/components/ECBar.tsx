@@ -55,26 +55,17 @@ import USAMap from "react-usa-map";
 import { generateColorWheel } from "@looker/components/lib/Form/Inputs/InputColor/ColorWheel/color_wheel_utils";
 import { BarStackHorizontal } from '@vx/shape';
 
-export const ECMap: React.FC<{
-  data: any[],
+export const ECBar: React.FC<{
+  top: any[],
   isEditing: boolean,
   setup: any,
   plot: any,
   config: any,
   setConfig: (newConfig: any) => void,
-}> = ({ data, isEditing, setup, plot, config, setConfig }) => {
-  const [selected, setSelected] = useState("")
+}> = ({ top, isEditing, setup, plot, config, setConfig }) => {
 
   const defaults = {
     chart_fill: "#4285F4",
-  }
-
-  function getDimensions() {
-    let dims = Object.keys(data[0])
-    let dimsArr = dims.map((d: any, i: number) => {
-      return {value: i.toString(), label: d}
-    })
-    return dimsArr
   }
 
   function getInnerChartYRatio() {
@@ -83,44 +74,20 @@ export const ECMap: React.FC<{
     return chart_inner_y * 100
   }
 
-  const mapHandler = (event) => {
-    console.log(event.target.dataset.name);
-  };
 
   const getStateColor = (call: string) => {
-    if (call == "Solid Biden") {
+    if (call == "1 Solid Biden") {
       return "#00B8F5"
-    } else if (call == "Lean Biden") {
+    } else if (call == "2 Lean Biden") {
       return "#47D1FF"
-    } else if (call == "Solid Trump") {
+    } else if (call == "5 Solid Trump") {
       return "#FF6B6B"
-    } else if (call == "Lean Trump") {
+    } else if (call == "4 Lean Trump") {
       return "#FF9999"
-    } else if (call == "Tossup") {
+    } else {
       return "#7A55E3"
     }
   }
-
-  const getOpacity = (state: string) => {
-    if ("" === selected) {
-      return "100%"
-    } else if (selected === state) {
-      return "100%"
-    } else {
-      return "30%"
-    }
-  }
-  
-  const statesCustomConfig = () => {
-    let stateConfig = {}
-    data.map(d=>{
-      d["Ecmap Abbreviation"] && (stateConfig[d["Ecmap Abbreviation"]] = {
-        fill: getStateColor(d["Forecast Lookup Forecast"]),
-        opacity: getOpacity(d["Ecmap Abbreviation"])
-      })
-    })
-    return stateConfig;
-  };
 
   const configCard = isEditing && (
     <PopoverContent p="small" width="300px" height="auto">
@@ -140,29 +107,95 @@ export const ECMap: React.FC<{
           value={config.data_rows || setup.data_rows} 
         />
       </Space>
-      <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">X Dimension</Text>
-        <Select 
-          defaultValue={config.data_x || setup.data_x} 
-          options={getDimensions()}
-          onChange={(e)=>{setConfig({...config, data_x: e})}}
-        />
-      </Space>
-      <Space mb="small">
-        <Text fontSize="xxsmall" variant="subdued">Y Dimension</Text>
-        <Select 
-          defaultValue={config.data_y || setup.data_y} 
-          options={getDimensions()}
-          onChange={(e)=>{setConfig({...config, data_y: e})}}
-        />
-      </Space>
     </PopoverContent>
   )
-    console.log(selected)
+
+  const call_keys = Object.keys(top[0]).filter(d => d !== 'model')
+  const yMax = (plot.height*0.9)
+  const getModel = (d) => d.model;
+  const voteScale = scaleLinear<number>({
+    domain: [0, 538],
+    nice: true,
+  });
+  const modelScale = scaleBand<string>({
+    domain: ["0"],
+    padding: 0.2,
+  });
+  const colorScale = scaleOrdinal<string, string>({
+    domain: call_keys,
+    range: ["#00B8F5", "#47D1FF", "#7A55E3", "#FF9999", "#FF6B6B"],
+  });
+
+  function getWConst() {
+    return Math.min(setup.CHART_X_RATIO*plot.width,setup.CHART_X_RATIO*800)
+  }
+
+
   return (
-    <ChartWrapper flexBasis={`97%`} className={isEditing ? "EDIT_MODE" : ""}>
-      <NiskanenMap data={data} codes={statesCustomConfig()} setSel={setSelected}/>
+    <Popover content={configCard} placement="right-start" focusTrap={false}>
+    <ChartWrapper flexBasis={`3%`} className={isEditing ? "EDIT_MODE" : ""}>
+    <svg height={`${0.075*plot.height}`} width={`100%`}>
+          <Group>
+            <BarStackHorizontal<string, string>
+              data={top}
+              keys={call_keys}
+              y={getModel}
+              xScale={voteScale}
+              yScale={modelScale}
+              color={colorScale}
+            >
+              {barStacks =>
+                barStacks.map(barStack =>
+                  barStack.bars.map(bar => (
+                    <rect
+                      key={`barstack-horizontal-${barStack.index}-${bar.index}`}
+                      x={bar.x*getWConst()}
+                      y={bar.y}
+                      width={bar.width*getWConst()}
+                      height={"100%"}
+                      fill={bar.color}
+                      stroke={"#f0e6e6"}
+                      strokeWidth={"3px"}
+                    />
+                  ))
+                )
+              }
+            </BarStackHorizontal>
+          </Group>
+          {[top].map((lineData, i) => {
+            return (
+              <Group key={`lines-${i}`} left={voteScale(270)*getWConst()} top={0}>
+                <rect
+                  ry={0}
+                  rx={voteScale(270)*getWConst()}
+                  stroke="#f0e6e6"
+                  fill="none"
+                  width="1px"
+                  height="100px"
+                  strokeDasharray="6 8"
+                  strokeWidth={4}
+                  strokeOpacity={1}
+                />
+              </Group>
+            );
+          })}
+        </svg>
+        <Flex>
+          <FlexItem flexBasis={`50%`}>
+            <Flex>
+              <FlexItem><Heading>Joe Biden (D)</Heading></FlexItem>
+              <FlexItem><Heading fontWeight="semiBold" ml="small">{`${top[0].lean_biden + top[0].solid_biden} votes`}</Heading></FlexItem>
+            </Flex>
+          </FlexItem>
+          <FlexItem flexBasis={`50%`}>
+            <Flex>
+              <FlexItem><Heading>Donald Trump (R)</Heading></FlexItem>
+              <FlexItem><Heading fontWeight="semiBold" ml="small">{`${top[0].lean_trump + top[0].solid_trump} votes`}</Heading></FlexItem>
+            </Flex>
+          </FlexItem>
+        </Flex>
     </ChartWrapper>
+    </Popover>
   );
 }
 

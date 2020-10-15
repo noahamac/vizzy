@@ -4,6 +4,8 @@ _Functionally composable and highly configurable visualizations for Looker._
 
 Problem: Using the extension framework, can we develop a visualization layer based on React components that is highly configurable, functionally composable, and leverages adjacent front end infrastructure to create an experience that is insightful, intuitive, and delightful? 
 
+VX: https://vx-demo.now.sh/gallery
+
 ## Usage
 
 - Install dependencies with Yarn: `yarn install`

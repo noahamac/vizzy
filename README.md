@@ -19,9 +19,14 @@ https://web.archive.org/web/20200916023711/https://www.niskanencenter.org/biteco
   In manifest for a LookML project on your Looker instance:
 
   ```
-  application: vizzy-dev {
-    label: "Vizzy (dev)"
-    uri: "https://localhost:8080/bundle.js"
+  application: vizzy {
+  label: "Vizzy"
+  url: "http://127.0.0.1:8080/bundle.js"
+  entitlements: {
+    local_storage: yes
+    navigation: yes
+    new_window: yes
+  }
   }
   ```
   

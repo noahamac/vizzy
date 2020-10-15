@@ -20,7 +20,7 @@ Problem: Using the extension framework, can we develop a visualization layer bas
     navigation: yes
     new_window: yes
   }
-}
+  }
   ```
   
   And you will also need to add a dummy model to the project.
